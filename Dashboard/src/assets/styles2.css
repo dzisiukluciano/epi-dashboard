@@ -1,0 +1,268 @@
+/* CSS file */
+Application {
+   background-image: "com/galeno/administracionHC/assets/myBackground.swf";
+   color: #333333;
+   theme-color: #0099ff;
+   font-size: 12;
+   }
+
+ApplicationControlBar {	
+   highlightAlphas: 0.22, 0.02;
+   fillAlphas: 0, 0;
+   fillColors: #ffffff, #ffffff;
+   backgroundColor: #ffffff;
+   backgroundAlpha: 0.1;
+   cornerRadius: 7;
+   dropShadowEnabled: false;
+   horizontal-align:right;
+}
+
+ControlBar {
+   highlightAlphas: 0.22, 0.02;
+   fillAlphas: 0, 0;
+   fillColors: #ffffff, #ffffff;
+   backgroundColor: #ffffff;
+   backgroundAlpha: 0.1;
+   cornerRadius: 7;
+   dropShadowEnabled: false;
+}
+
+Panel {
+   corner-radius: 7;
+   header-height: 22;
+   header-colors: #ffffff, #cccccc;
+   footer-colors: #ffffff, #cccccc;
+   color: #333333;
+   border-color: #cccccc;
+   shadow-distance: 2;
+   shadow-direction: center;
+   background-alpha:64;
+   }
+   
+Text {
+    color: #333333;
+}
+   
+TabNavigator {
+   horizontal-align: left;
+   horizontal-gap: 0;
+   margin-left: 0;
+   margin-right: 0;
+   tab-height: 20;
+   tab-width: 68;
+   theme-color: #0066ff;
+   border-color: #999999;
+   background-alpha: 64;
+   }
+
+Tab {
+   corner-radius: 7;
+   fill-colors: #ffffff, #cccccc;
+   selected-fill-colors: #99ccff, #ffffff;
+   border-color: #999999;
+   color: #333333;
+   }
+
+Accordion {
+   header-height: 19;
+   border-thickness: 1;
+   corner-radius: 1;
+   drop-shadow: true;
+   shadow-distance: 2;
+   shadow-direction: center;
+   open-duration: 406;
+   fill-colors: #ffffff, #0066cc, #ffffff, #0066ff;
+   selected-fill-colors: #ffffff, #000066;	      
+   theme-color: #666666;
+   color: #333333;
+   background-alpha: 64;
+}
+
+LinkBar {
+   horizontal-gap: 13;
+   corner-radius: 5;
+   disabled-color: #135087;
+   textRollOverColor: #afafaf;
+   color: #E8E7E7;
+   font-family: Arial;
+   fontSize: 12;
+   background-color: #ffffff;
+   roll-over-color: #ffffff;
+   selection-color: #ffffff;
+}  
+
+List {
+   alternating-item-colors: #f7f7f7, #ffffff;
+   background-color: #ffffff;
+   border-color: #666666;
+   color: #333333;
+   roll-over-color: #eeeeee;
+   selection-color: #c1defb;
+   text-roll-over-color: #666666;
+   text-selected-color: #135087;
+   font-weight : normal;
+   }
+   
+Tree {
+	alternating-item-colors: #ffffff, #ffffff;
+	indentation: 17;
+	open-duration: 406;
+	roll-over-color: #eeeeee;
+	selection-color: #c1defb;
+	text-roll-over-color: #666666;
+	text-selected-color: #135087;
+	color: #333333;
+	use-rollover: true;
+   }
+
+RowColorDataGrid {
+   alternating-row-colors: #ffffff, #ffffff;   
+   border-color: #666666;
+   color: #333333;
+   header-colors: #ffffff, #cccccc;
+   roll-over-color: #eeeeee;
+   selection-color: #c1defb;
+   text-roll-over-color: #000000;
+   text-selected-color: #000000;
+   v-grid-line-color: #cccccc;
+	}
+	
+DataGrid {
+   alternating-row-colors: #f7f7f7, #ffffff;   
+   border-color: #666666;
+   color: #333333;
+   header-colors: #ffffff, #cccccc;
+   roll-over-color: #eeeeee;
+   selection-color: #c1defb;
+   text-roll-over-color: #666666;
+   text-selected-color: #135087;
+   v-grid-line-color: #cccccc;   
+   }
+   
+TileList{
+	roll-over-color : #eeeeee;
+	selection-color : #c1defb;
+	text-roll-over-color : #666666;
+	text-selected-color : #135087;
+	color : #333333;
+}
+
+TextInput {
+   background-color: #dddddd;
+   background-alpha:27;
+   border-color:#cccccc;
+   border-cap-color:#666666;
+   highlight-color:#cccccc;
+   theme-color:#0099ff;
+   color:#666666;
+   }
+
+ComboBox {
+   corner-radius:7;
+   theme-color:#0099ff;
+   fill-colors: #99ccff, #ffffff;
+   background-color:#ffffff;
+   selection-color:#99ccff;
+   roll-over-color:#cccccc;
+   color:#333333;
+   text-selected-color:#003399;
+   text-roll-over-color:#666666;
+   font-weight:normal;
+   }
+
+CheckBox {
+   border-color: #999999;
+   theme-color: #0066ff;
+   fill-colors: #ffffcc, #ffffff;
+   }
+
+HSlider {
+    tick-length: 4;
+   tick-thickness: 2;
+   tick-color: #cccccc;
+   track-colors: #99ccff, #ffffff;
+   border-color: #666666;
+   fill-colors: #99ccff, #ffffff;
+   theme-color: #0099ff;
+   }
+
+Button {
+   width: 80;
+   height: 22;
+   border-thickness: 3;
+   corner-radius: 7;
+   fill-colors: #ffffff, #cccccc;
+   border-color: #666666;
+   theme-color: #99ccff;
+   text-roll-over-color: #666666;
+   text-selected-color: #006699;
+   color: #333333;
+   text-align: "left";
+   roll-over-color: #ffffff;
+   }
+   
+ScrollBar {
+   track-colors: #cccccc, #ffffff;
+   fill-colors: #cccccc, #ffffff;
+   border-color: #999999;
+   theme-color: #99ccff;
+   corner-radius: 5;
+   }
+
+DateChooser {
+   header-colors:#99ccff, #ffffff;
+   roll-over-color:#eeeeee;
+   selection-color: #99ccff;
+   today-color: #0099ff;
+   border-color: #666666;
+   color: #333333;
+   }
+
+TextArea {
+   font-family: "Verdana";
+   font-size: 10;
+   leading: 2;
+   margin-left: 5;
+   margin-right: 5;
+   color: #333333;
+   }
+   
+Alert {
+	color : #0f3177;
+	title-style-name : “alertTitle”;
+	header-height:19;
+	border-thickness: 1;
+	drop-shadow-enabled: true;
+	drop-shadow-color :#d1ddf7;
+	background-color: #ffffff;
+	corner-radius :6;
+	border-style :solid;
+	header-colors : #90a4d1, #5970a0;
+	footer-colors : #9db6d9, #ffffff;
+	border-color : #5970a0;
+	}
+	.alertTitle{
+	font-family :Verdana;
+	font-size :10;
+	font-weight :bold;
+	text-align :left;
+	color :#ffffff;
+	}
+
+TitleWindow {
+	header-height:10;
+}
+
+VentanaCrud {		
+	header-height : 20;
+	borderColor: #74a9c4;
+	borderAlpha: 1;
+	highlightAlphas: 0, 0;
+	headerColors: #1d74a0, #4e97bc;
+	footerColors: #4e97bc, #1d74a0;
+	title-style-name: "myTitle";
+}
+	.myTitle {
+		color : #ffffff;
+		font-weight : bold;
+	}
