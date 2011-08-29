@@ -24,14 +24,22 @@
 			import com.esria.samples.dashboard.view.PieChartContent;
 			import com.esria.samples.dashboard.view.Pod;
 			import com.esria.samples.dashboard.view.PodContentBase;
+			
+			import components.editTab;
+			
 			import mx.containers.Canvas;
 			import mx.controls.Alert;
+			import mx.core.IFlexDisplayObject;
 			import mx.events.FlexEvent;
 			import mx.events.IndexChangedEvent;
 			import mx.events.ItemClickEvent;
+			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			import mx.rpc.http.HTTPService;
+			
+			[Embed(source='assets/plus.png')]
+			private static var plusIcon:Class;
 			
 			// Array of PodLayoutManagers
 			private var podLayoutManagers:Array = new Array();
@@ -43,6 +51,9 @@
 			// Used for podLayoutManager calls after pods have been created for the first time.
 			// Also, used for look-ups when saving pod content ViewStack changes.
 			private var podHash:Object = new Object();
+			
+			//Permisos
+			var permisoAddTabs:Boolean = true;
 			
 			private function onApplicationComplete():void
 			{
@@ -57,7 +68,7 @@
 			
 			private function onFaultHttpService(e:FaultEvent):void
 			{
-				Alert.show("Unable to load data/pods.xml.");
+				Alert.show("Unable to load data");
 			}
 			
 			private function onResultHttpService(e:ResultEvent):void
@@ -76,16 +87,23 @@
 					canvas.label = viewXMLList[i].@label;
 					canvas.percentWidth = 100;
 					canvas.percentHeight = 100;
+					//luego va a ser el id posta del objeto Tab
+					canvas.id = viewXMLList[i].@id;
 					viewStack.addChild(canvas);
 					
 					// Create a manager for each view.
 					var manager:PodLayoutManager = new PodLayoutManager();
 					manager.container = canvas;
+					//luego va a ser el id posta del objeto Tab
 					manager.id = viewXMLList[i].@id;
 					manager.addEventListener(LayoutChangeEvent.UPDATE, StateManager.setPodLayout);
 					// Store the pod xml data. Used when view is first made visible.
 					podDataDictionary[manager] = viewXMLList[i].pod;
 					podLayoutManagers.push(manager);
+				}
+				
+				if(permisoAddTabs){
+					agregarPestaniaNewTab()
 				}
 				
 				var index:Number = StateManager.getViewIndex();
@@ -174,7 +192,8 @@
 				delete podDataDictionary[manager];
 				
 				// Listen for the last pod to complete so the layout from the ContainerWindowManager is done correctly. 
-				pod.addEventListener(FlexEvent.UPDATE_COMPLETE, onCreationCompletePod);
+				if(pod!=null)
+					pod.addEventListener(FlexEvent.UPDATE_COMPLETE, onCreationCompletePod);
 			}
 			
 			// Pod has been created so update the respective PodLayoutManager.
@@ -193,13 +212,102 @@
 				var viewId:String = PodLayoutManager(podHash[pod]).id;
 				StateManager.setPodViewIndex(viewId, pod.id, e.newIndex);
 			}
+			
+			
+			
+			private function getCurrentTab():Canvas{
+				var index:Number = StateManager.getViewIndex();
+				index = Math.min(tabBar.numChildren - 1, index);
+				return viewStack.getChildAt(index) as Canvas;
+			}
+						
+			private function configTab():void{
+				var tab:Canvas = getCurrentTab();
+				
+				var popUp:editTab = editTab(PopUpManager.createPopUp(btnConfig, editTab,true));
+				popUp.addEventListener("saveTab",onSaveTab);
+				popUp.addEventListener("deleteTab",onDeleteTab);
+				popUp.txtTabName.text = tab.label;
+				PopUpManager.centerPopUp(popUp);
+				popUp.x = popUp.x - popUp.width;
+			}
+			
+			private function onSaveTab(e:Event):void{
+				var tab:Canvas = getCurrentTab();
+				
+				//para que no se cebe agregando tabs
+				if((tabBar.width < 0.8*Application.application.width) && tab.id == "newtabId")
+					agregarPestaniaNewTab();
+				
+				var edit:IFlexDisplayObject = e.target as IFlexDisplayObject;
+				tab.label = editTab(edit).txtTabName.text;
+				tab.icon = null;
+				
+				//random string para salir del paso
+				var a:String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+				var alphabet:Array = a.split("");
+				var randomLetter:String = "";
+				for (var i:Number = 0; i < 10; i++){
+					randomLetter += alphabet[Math.floor(Math.random() * alphabet.length)];
+				}	
+				
+				//luego va a ser el id posta del objeto Tab
+				for each(var manager:PodLayoutManager in podLayoutManagers){
+					if(manager.id == tab.id){
+						manager.id = randomLetter;
+					}
+				}
+				tab.id = randomLetter;
+				
+				
+				PopUpManager.removePopUp(edit);
+			}
+			
+			private function onDeleteTab(e:Event):void{
+				var tab:Canvas = getCurrentTab();
+				viewStack.removeChild(tab);
+				var managers:Array = new Array();
+				for each(var manager:PodLayoutManager in podLayoutManagers){
+					if(manager.id != tab.id){
+						managers.push(manager);
+					}
+				}
+				podLayoutManagers = managers;
+				PopUpManager.removePopUp(e.target as IFlexDisplayObject);
+			}
+			
+			private function agregarPestaniaNewTab():void{
+				// ****** Creo la pestaña "New Tab" *************
+				var canvs:Canvas = new Canvas();
+				canvs.horizontalScrollPolicy = "off";
+				canvs.verticalScrollPolicy = "off";
+				canvs.label = "New Tab";
+				canvs.icon = plusIcon;
+				canvs.id = "newtabId";
+				canvs.percentWidth = 100;
+				canvs.percentHeight = 100;
+				viewStack.addChild(canvs);
+				
+				var managr:PodLayoutManager = new PodLayoutManager();
+				managr.container = canvs;
+				managr.id = "newTabId";
+				managr.addEventListener(LayoutChangeEvent.UPDATE, StateManager.setPodLayout);
+				// Store the pod data. Used when view is first made visible.
+				podDataDictionary[managr] = new XMLList();
+				podLayoutManagers.push(managr);
+			}
+			
 		]]>
 	</mx:Script>
-	<mx:TabBar
-		id="tabBar"
-		itemClick="onItemClickTabBar(event)"
-		height="35" 
-		dataProvider="viewStack" />
+	<mx:HBox width="100%">
+		<mx:TabBar
+			id="tabBar"
+			itemClick="onItemClickTabBar(event)"
+			height="35" 
+			dataProvider="viewStack" />	
+		<mx:Spacer width="100%"/>
+		<mx:LinkButton id="btnConfig" icon="@Embed(source='assets/config.png')" click="configTab()" toolTip="Configure current tab"/>
+	</mx:HBox>
 	<mx:ViewStack
 		id="viewStack"
 		paddingTop="15"

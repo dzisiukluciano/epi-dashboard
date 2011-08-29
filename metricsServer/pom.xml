@@ -7,13 +7,13 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.epidataconsulting.metrics</groupId>
-	<artifactId>metrics-server</artifactId>
+	<artifactId>metricsServer</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>server Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 	<build>
-		<finalName>metrics-server</finalName>
+		<finalName>metricsServer</finalName>
 		<outputDirectory>src/main/webapp/WEB-INF/classes</outputDirectory>
 		<plugins>	
 			<plugin>
@@ -65,7 +65,7 @@
 				<configuration>
 					<warSourceDirectory>src/main/webapp</warSourceDirectory>
 					<webappDirectory>src/main/webapp</webappDirectory>
-					<warName>metrics-server</warName>
+					<warName>metricsServer</warName>
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
@@ -109,7 +109,7 @@
 				<artifactId>flexmojos-maven-plugin</artifactId>
 				<version>${flex.mojos.version}</version>
 				<configuration>
-					<webappDirectory>src/main/webapp/metrics-client</webappDirectory>
+					<webappDirectory>src/main/webapp/Dashboard</webappDirectory>
 					<stripVersion>true</stripVersion>
 				</configuration>
 				<executions>
@@ -131,9 +131,9 @@
 									classpath="${flex.home}\ant\lib\flexTasks.jar" />
 								<html-wrapper title="TITLE:${flash.html.title}"
 									file="index.html" height="100%" width="100%" bgcolor="red"
-									application="metrics-client" swf="metrics-client"
+									application="Dashboard" swf="Dashboard"
 									version-major="10" version-minor="0" version-revision="0"
-									history="true" output="src/main/webapp/metrics-client" />
+									history="true" output="src/main/webapp/Dashboard" />
 							</tasks>
 						</configuration>
 						<goals>
@@ -145,12 +145,6 @@
 		</plugins>
 	</build>
 	<dependencies>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>metrics-client</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<type>swf</type>
-		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>metrics-common</artifactId>
