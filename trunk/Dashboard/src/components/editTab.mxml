@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+	title="Tab Configuration" creationComplete="init()">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			private var permisos:ArrayCollection;
+			
+			public function init():void{
+				
+				var a:Array= 
+					[{name:"Administrador", data:"#FF0000"},
+					{name:"Dios", data:"#00FF00"},
+					{name:"Usuario", data:"#0000FF"}];				
+				this.permisos = new ArrayCollection(a);
+			}
+			
+			public function saveTab():void{
+				dispatchEvent(new Event("saveTab"));
+			}
+			
+			private function deleteTab():void{
+				dispatchEvent(new Event("deleteTab"));
+			}
+			
+			
+		]]>
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="100%" horizontalAlign="right">
+		<mx:FormItem label="Tab Name:" fontWeight="bold">			
+			<mx:TextInput id="txtTabName" width="120"/>
+		</mx:FormItem>
+		<mx:FormItem label="Role:" fontWeight="bold">
+			<mx:ComboBox id="cmbPermisos" prompt="Select" dataProvider="{this.permisos}" labelField="name" width="120"/>
+		</mx:FormItem>
+		
+		<mx:HBox width="100%" horizontalAlign="right" paddingTop="30">
+			<mx:Button label="Delete" click="deleteTab()"/>
+			<mx:Button label="Cancel" click="{PopUpManager.removePopUp(this)}"/>
+			<mx:Button label="Save" icon="@Embed(source='../assets/save.png')" click="saveTab()"/>
+		</mx:HBox>
+		
+	</mx:VBox>
+	
+</mx:TitleWindow>

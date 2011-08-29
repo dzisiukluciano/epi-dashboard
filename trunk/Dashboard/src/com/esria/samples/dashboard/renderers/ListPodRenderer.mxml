@@ -17,7 +17,7 @@
 			private function onInitialize():void
 			{
 				_dateFormatter = new DateFormatter();
-				_dateFormatter.formatString = "MM/DD/YY";
+				_dateFormatter.formatString = "DD/MM/YY";
 			}
 			
 			override public function set data(value:Object):void
