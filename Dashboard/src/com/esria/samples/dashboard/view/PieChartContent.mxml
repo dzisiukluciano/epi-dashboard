@@ -40,9 +40,8 @@
 			
 			private function pieChartDataTipFunction(o:HitData):String
 			{
-				var a:Array = properties.@dataTipUnitLabel.split("*");
 				var s:String = o.item[properties.@dataTipLabelField] + "\n";
-				s += a[0] + o.item[properties.@valueField] + a[1] + "\n";
+				s += o.item[properties.@valueField] + "\n";
 				s += Math.round(PieSeriesItem(o.chartItem).percentValue) + "%";
 				return s;
 			}

@@ -81,9 +81,8 @@
 			
 			private function columnChartDataTipFunction(o:HitData):String
 			{
-				var a:Array = properties.@dataTipUnitLabel.split("*");
 				var s:String = o.item[properties.@dataTipLabelField] + "\n";
-				s += a[0] + o.item[properties.@valueField] + a[1] + "\n";
+				s += o.item[properties.@valueField] + "\n";
 				return s;
 			}
 			

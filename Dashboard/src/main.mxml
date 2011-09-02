@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
- The main application file for the Dashboard demo app.
- Loads the layout XML and creates PodLayoutManagers.
--->
 <mx:Application
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	horizontalAlign="left"
@@ -11,8 +7,16 @@
 	backgroundSize="100%"
 	backgroundColor="#ffffff"
 	paddingLeft="45" paddingRight="45" paddingBottom="35" paddingTop="34"
-	applicationComplete="onApplicationComplete()" viewSourceURL="srcview/index.html">
+	applicationComplete="onApplicationComplete()">
+	
 	<mx:Style source="/assets/styles.css" />
+	
+		
+	<mx:RemoteObject id="tabService" source="tabRo" showBusyCursor="true">
+		<mx:method name="findAllTabs" result="findAllTabsResultHandler(event.result)" fault="faultHandler(event.fault)"/>
+	</mx:RemoteObject>
+		
+	
 	<mx:Script>
 		<![CDATA[
 			import com.esria.samples.dashboard.events.LayoutChangeEvent;
@@ -27,6 +31,9 @@
 			
 			import components.editTab;
 			
+			import flash.sampler.NewObjectSample;
+			
+			import mx.collections.ArrayCollection;
 			import mx.containers.Canvas;
 			import mx.controls.Alert;
 			import mx.core.IFlexDisplayObject;
@@ -34,9 +41,12 @@
 			import mx.events.IndexChangedEvent;
 			import mx.events.ItemClickEvent;
 			import mx.managers.PopUpManager;
+			import mx.rpc.Fault;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			import mx.rpc.http.HTTPService;
+			
+			import vo.Tab;
 			
 			[Embed(source='assets/plus.png')]
 			private static var plusIcon:Class;
@@ -53,22 +63,21 @@
 			private var podHash:Object = new Object();
 			
 			//Permisos
-			var permisoAddTabs:Boolean = true;
+			private var permisoAddTabs:Boolean = true;
 			
 			private function onApplicationComplete():void
 			{
-				// Load pods.xml, which contains the pod layout.
-				var httpService:HTTPService = new HTTPService();
-				httpService.url = "data/pods.xml";
-				httpService.resultFormat = "e4x";
-				httpService.addEventListener(FaultEvent.FAULT, onFaultHttpService);
-				httpService.addEventListener(ResultEvent.RESULT, onResultHttpService);
-				httpService.send();
+				//cargo la configuracion
+				tabService.findAllTabs;
 			}
 			
-			private function onFaultHttpService(e:FaultEvent):void
-			{
-				Alert.show("Unable to load data");
+			private function findAllTabsResultHandler(e:*):void{
+				var tabs:ArrayCollection = e as ArrayCollection;
+				
+			}
+			
+			private function faultHandler(e:Fault):void{
+				Alert.show(e.message);
 			}
 			
 			private function onResultHttpService(e:ResultEvent):void
@@ -79,23 +88,23 @@
 				for (var i:Number = 0; i < len; i++) // Loop through the view nodes.
 				{
 					// Create a canvas for each view node.
-					var canvas:Canvas = new Canvas();
+					var tab:Tab = new Tab();
 					// PodLayoutManager handles resize and should prevent the need for
 					// scroll bars so turn them off so they aren't visible during resizes.
-					canvas.horizontalScrollPolicy = "off";
-					canvas.verticalScrollPolicy = "off";
-					canvas.label = viewXMLList[i].@label;
-					canvas.percentWidth = 100;
-					canvas.percentHeight = 100;
+					tab.horizontalScrollPolicy = "off";
+					tab.verticalScrollPolicy = "off";
+					tab.label = viewXMLList[i].@label;
+					tab.percentWidth = 100;
+					tab.percentHeight = 100;
 					//luego va a ser el id posta del objeto Tab
-					canvas.id = viewXMLList[i].@id;
-					viewStack.addChild(canvas);
+					tab.id = viewXMLList[i].@id;
+					viewStack.addChild(tab);
 					
 					// Create a manager for each view.
 					var manager:PodLayoutManager = new PodLayoutManager();
-					manager.container = canvas;
+					manager.container = tab;
 					//luego va a ser el id posta del objeto Tab
-					manager.id = viewXMLList[i].@id;
+					manager.id = tab.id;
 					manager.addEventListener(LayoutChangeEvent.UPDATE, StateManager.setPodLayout);
 					// Store the pod xml data. Used when view is first made visible.
 					podDataDictionary[manager] = viewXMLList[i].pod;
@@ -215,10 +224,10 @@
 			
 			
 			
-			private function getCurrentTab():Canvas{
+			private function getCurrentTab():Tab{
 				var index:Number = StateManager.getViewIndex();
 				index = Math.min(tabBar.numChildren - 1, index);
-				return viewStack.getChildAt(index) as Canvas;
+				return viewStack.getChildAt(index) as Tab;
 			}
 						
 			private function configTab():void{
@@ -233,10 +242,10 @@
 			}
 			
 			private function onSaveTab(e:Event):void{
-				var tab:Canvas = getCurrentTab();
+				var tab:Tab = getCurrentTab();
 				
 				//para que no se cebe agregando tabs
-				if((tabBar.width < 0.8*Application.application.width) && tab.id == "newtabId")
+				if((tabBar.width < 0.8*Application.application.width) && tab.newTab)
 					agregarPestaniaNewTab();
 				
 				var edit:IFlexDisplayObject = e.target as IFlexDisplayObject;
@@ -258,38 +267,42 @@
 					}
 				}
 				tab.id = randomLetter;
+				tab.newTab = false;
 				
 				
 				PopUpManager.removePopUp(edit);
 			}
 			
 			private function onDeleteTab(e:Event):void{
-				var tab:Canvas = getCurrentTab();
-				viewStack.removeChild(tab);
-				var managers:Array = new Array();
-				for each(var manager:PodLayoutManager in podLayoutManagers){
-					if(manager.id != tab.id){
-						managers.push(manager);
+				var tab:Tab = getCurrentTab();
+				if(!tab.newTab){
+					viewStack.removeChild(tab);
+					var managers:Array = new Array();
+					for each(var manager:PodLayoutManager in podLayoutManagers){
+						if(manager.id != tab.id){
+							managers.push(manager);
+						}
 					}
+					podLayoutManagers = managers;
+					PopUpManager.removePopUp(e.target as IFlexDisplayObject);
 				}
-				podLayoutManagers = managers;
-				PopUpManager.removePopUp(e.target as IFlexDisplayObject);
 			}
 			
 			private function agregarPestaniaNewTab():void{
 				// ****** Creo la pestaña "New Tab" *************
-				var canvs:Canvas = new Canvas();
-				canvs.horizontalScrollPolicy = "off";
-				canvs.verticalScrollPolicy = "off";
-				canvs.label = "New Tab";
-				canvs.icon = plusIcon;
-				canvs.id = "newtabId";
-				canvs.percentWidth = 100;
-				canvs.percentHeight = 100;
-				viewStack.addChild(canvs);
+				var tab:Tab = new Tab();
+				tab.newTab = true;
+				tab.horizontalScrollPolicy = "off";
+				tab.verticalScrollPolicy = "off";
+				tab.label = "New Tab";
+				tab.icon = plusIcon;
+				tab.id = "newtabId";
+				tab.percentWidth = 100;
+				tab.percentHeight = 100;
+				viewStack.addChild(tab);
 				
 				var managr:PodLayoutManager = new PodLayoutManager();
-				managr.container = canvs;
+				managr.container = tab;
 				managr.id = "newTabId";
 				managr.addEventListener(LayoutChangeEvent.UPDATE, StateManager.setPodLayout);
 				// Store the pod data. Used when view is first made visible.
