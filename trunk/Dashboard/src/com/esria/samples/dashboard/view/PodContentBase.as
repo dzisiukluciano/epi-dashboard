@@ -4,47 +4,33 @@
 
 package com.esria.samples.dashboard.view
 {
+import autoServices.PodDataService;
+
+import autoValueObjects.Pod;
+
 import flash.xml.XMLNode;
+
+import mx.collections.ArrayCollection;
 import mx.containers.VBox;
 import mx.controls.Alert;
 import mx.events.FlexEvent;
-import mx.rpc.events.FaultEvent;
-import mx.rpc.events.ResultEvent;
-import mx.rpc.http.HTTPService;
-import mx.utils.ObjectProxy;
 import mx.events.IndexChangedEvent;
+import mx.utils.ObjectProxy;
 
 public class PodContentBase extends VBox
 {
 	[Bindable]
-	public var properties:XML; // Properties are from pods.xml.
+	public var pod:Pod;
 	
 	function PodContentBase()
 	{
 		super();
 		percentWidth = 100;
 		percentHeight = 100;
-		addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
-	}
-	
-	private function onCreationComplete(e:FlexEvent):void
-	{
-		// Load the data source.
-		var httpService:HTTPService = new HTTPService();
-		httpService.url = properties.@dataSource;
-		httpService.resultFormat = "e4x";
-		httpService.addEventListener(FaultEvent.FAULT, onFaultHttpService);
-		httpService.addEventListener(ResultEvent.RESULT, onResultHttpService);
-		httpService.send();
-	}
-	
-	private function onFaultHttpService(e:FaultEvent):void
-	{
-		Alert.show("Unable to load datasource, " + properties.@dataSource + ".");
 	}
 	
 	// abstract.
-	protected function onResultHttpService(e:ResultEvent):void	{}
+	protected function retrievePodDataResultHandler(e:*):void	{}
 	
 	// Converts XML attributes in an XMLList to an Array.
 	protected function xmlListToObjectArray(xmlList:XMLList):Array

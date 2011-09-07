@@ -37,7 +37,7 @@ stored in this file rather than a database or separate XML files.
 			selectedViewIndex="1"
 			valueField="value"
 			categoryField="month"
-			dataTipUnitLabel="$*M"
+			dataTipUnitLabel=""
 			dataTipLabelField="month"/>
 		<pod
 			id="pod06"
@@ -46,7 +46,7 @@ stored in this file rather than a database or separate XML files.
 			dataSource="data/revenue_by_region.xml"
 			valueField="value"
 			categoryField="region"
-			dataTipUnitLabel="$*M"
+			dataTipUnitLabel=""
 			dataTipLabelField="region"/>
 		<pod
 			id="pod01"
@@ -55,7 +55,7 @@ stored in this file rather than a database or separate XML files.
 			dataSource="data/profit.xml"
 			valueField="value"
 			categoryField="month"
-			dataTipUnitLabel="$*M"
+			dataTipUnitLabel=""
 			dataTipLabelField="month"/>
 		<pod
 			id="pod02"

@@ -8,13 +8,16 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:effects="qs.charts.effects.*"
 	xmlns:renderers="qs.charts.renderers.*"
-	width="100%" height="100%">
+	width="100%" height="100%"
+	creationComplete="init()" 
+	xmlns:autoServices="autoServices.*">
 	<mx:Script>
 		<![CDATA[
-			import mx.charts.events.ChartItemEvent;
 			import mx.charts.HitData;
+			import mx.charts.events.ChartItemEvent;
 			import mx.charts.series.items.PieSeriesItem;
 			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
 			import mx.rpc.events.ResultEvent;
 			
 			// The original data provider used for drillUp.
@@ -28,20 +31,22 @@
 			// are from Ely Greenfield's blog, http://www.quietlyscheming.com/blog/charts/chart-drilldown-animations/.
 			private var drillToIndex:Number;
 			
-			override protected function onResultHttpService(e:ResultEvent):void
+			private function init():void{
+				retrievePodDataResult.token = podDataService.retrievePodData(pod.dataSource,pod.categoryField,pod.valueField);
+			}
+			
+			override protected function retrievePodDataResultHandler(result:*):void
 			{
-				var a:Array = xmlListToObjectArray(e.result.item);
-				var ac:ArrayCollection = new ArrayCollection(a);
-				initialDataProvider = ac;
-				dataProvider = ac;
+				initialDataProvider = result as ArrayCollection;
+				dataProvider = result as ArrayCollection;
 				
 				pieChart.addEventListener(ChartItemEvent.ITEM_CLICK, drillDown);
 			}
 			
 			private function pieChartDataTipFunction(o:HitData):String
 			{
-				var s:String = o.item[properties.@dataTipLabelField] + "\n";
-				s += o.item[properties.@valueField] + "\n";
+				var s:String = o.item["categoryField"] + "\n";
+				s += o.item["valueField"] + "\n";
 				s += Math.round(PieSeriesItem(o.chartItem).percentValue) + "%";
 				return s;
 			}
@@ -51,7 +56,7 @@
 			public function createDrillDownData(data:Object):ArrayCollection
 			{
 				var ac:ArrayCollection = new ArrayCollection();
-				var total:Number = data[properties.@valueField];
+				var total:Number = data["valueField"];
 				var regions:Array;
 				
 				if (data.region == "North America")
@@ -79,8 +84,8 @@
 				{
 					var o:Object = new Object();
 					value = (randomPercents[i] / totalPercents) * total;
-					o[properties.@valueField] = Math.round(value * 10) / 10;
-					o[properties.@categoryField] = regions[i];
+					o["valueField"] = Math.round(value * 10) / 10;
+					o["categoryField"] = regions[i];
 					ac.addItem(o);
 				}
 				
@@ -113,6 +118,11 @@
 		]]>
 	</mx:Script>
 	
+	<mx:CallResponder id="retrievePodDataResult"/>
+	<autoServices:PodDataService id="podDataService" 
+ 		fault="Alert.show('Error retrieving pod data: \n'+event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+ 		result="retrievePodDataResultHandler(event.result)"/>
+	
 	<effects:DrillDownEffect id="drillDownEffect" duration="1500" effectEnd="pieChart.showDataTips=true" />
     <effects:DrillUpEffect id="drillUpEffect" duration="1500" effectEnd="pieChart.showDataTips=true"/>
 	
@@ -125,7 +135,7 @@
 		<mx:series>
 			<mx:PieSeries
 				id="pieSeries"
-				field="{properties.@valueField}"
+				field="valueField"
 				labelPosition="callout">
 				<mx:itemRenderer>
 					<mx:Component>

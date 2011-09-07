@@ -3,13 +3,15 @@ package com.epidataconsulting.metrics.common.dao;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.transform.ResultTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +30,16 @@ public abstract class AbstractDomainDAO {
 	@Qualifier("sessionFactory")
 	private SessionFactory sessionFactory;
 	
+	@Autowired
+	@Qualifier("dataSource")
+	private DataSource dataSource;
+	
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
+	}
+	
+	public DataSource getDataSource() {
+		return dataSource;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -37,6 +47,26 @@ public abstract class AbstractDomainDAO {
 		Session session = getSessionFactory().getCurrentSession();
 		Criteria criteria = session.createCriteria(getClazz());
 		return (List<T>)criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> List<T> findAllDistinct() {
+		Session session = getSessionFactory().getCurrentSession();
+		Criteria criteria = session.createCriteria(getClazz());
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return (List<T>)criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> List<T> searchByQuery (String query) {
+		Session session = getSessionFactory().getCurrentSession();
+		return (List<T>)session.createQuery(query).list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> List<T> searchByQuery(String query, ResultTransformer transformer) {
+		Session session = getSessionFactory().getCurrentSession();
+		return (List<T>)session.createQuery(query).setResultTransformer(transformer).list();
 	}
 	
 	public void save(AbstractDomain object) {

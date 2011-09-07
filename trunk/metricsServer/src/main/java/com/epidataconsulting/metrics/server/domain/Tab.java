@@ -15,9 +15,9 @@ public class Tab {
 	@Column(nullable = false)
 	private String name;
 	
-	@ManyToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(name="tab_pod",
-			joinColumns = {@JoinColumn(name="tab_id")},
+			joinColumns = {@JoinColumn(name="tab_id", unique = true)},
 			inverseJoinColumns = {@JoinColumn(name= "pod_id")}     
 	)
 	private List<Pod> pods;

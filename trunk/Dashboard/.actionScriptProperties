@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <actionScriptProperties analytics="false" mainApplicationPath="main.mxml" projectUUID="f5d0faa2-7537-43b7-82e7-12603c168e17" version="6">
-  <compiler additionalCompilerArguments="-services &quot;C:\Documents and Settings\Administrador\Escritorio\epi-dashboard\metricsServer\src\main\webapp\WEB-INF\flex\services-config.xml&quot; -locale en_US" autoRSLOrdering="false" copyDependentFiles="true" flex3CompatMode="true" flexSDK="Flex 3.5" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderLocation="C:/Documents and Settings/Administrador/Escritorio/epi-dashboard/metricsServer/src/main/webapp/Dashboard" outputFolderPath="bin-debug" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
+  <compiler additionalCompilerArguments="-services &quot;C:\Documents and Settings\Administrador\Escritorio\epi-dashboard\metricsServer\src\main\webapp\WEB-INF\flex\services-config.xml&quot; -locale en_US" autoRSLOrdering="false" copyDependentFiles="true" flex3CompatMode="false" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderLocation="C:/Documents and Settings/Administrador/Escritorio/epi-dashboard/metricsServer/src/main/webapp/Dashboard" outputFolderPath="bin-debug" rootURL="" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
     <compilerSourcePath/>
     <libraryPath defaultLinkType="1">
       <libraryPathEntry kind="4" path=""/>
+      <libraryPathEntry kind="1" linkType="1" path="${DCD_LIB_LOCATION}"/>
+      <libraryPathEntry kind="1" linkType="1" path="${DCD_LOCALE_LOCATION}"/>
+      <libraryPathEntry kind="3" linkType="1" path="${DCD_FIBER_LOCATION}/fiber.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="${DCD_FIBER_LOCALE_LOCATION}/fiber_rb.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="${DCD_FIBER_LOCATION}/playerfds.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
