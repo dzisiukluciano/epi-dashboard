@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<flexProperties enableServiceManager="false" flexServerFeatures="4" flexServerType="2" serverContextRoot="/metrics/" serverRoot="C:/Documents and Settings/Administrador/Escritorio/epi-dashboard/metricsServer/src/main/webapp" serverRootURL="http://localhost:8080/metrics" toolCompile="true" useServerFlexSDK="false" version="1"/>
+<flexProperties enableServiceManager="false" flexServerFeatures="4" flexServerType="2" fmlDataModelLocation=".model/Dashboard.fml" serverContextRoot="/metrics" serverRoot="C:/Documents and Settings/Administrador/Escritorio/epi-dashboard/metricsServer/src/main/webapp" serverRootURL="http://localhost:8080/metrics/" toolCompile="true" useServerFlexSDK="false" version="1"/>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<s:SparkSkin 
+    xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:fb="http://ns.adobe.com/flashbuilder/2009" 
+    minWidth="21" minHeight="21" alpha.disabledStates="0.5">
+    <fx:Metadata>[HostComponent("spark.skins.spark.TabBarButtonSkin")]</fx:Metadata>
+    
+    <!-- host component -->
+    <fx:Script fb:purpose="styling">
+		     
+		[Bindable] private var labelDisplayWidth:Number = 0;
+		
+		private function setTabWidth():void{
+			labelDisplayWidth = hgTab.width + hgTab.left 
+				+ hgTab.right + 3;
+		}
+        
+		static private const exclusions:Array = ["labelDisplay"];
+		
+		override public function get colorizeExclusions():Array {return exclusions;}
+		
+		override protected function initializationComplete():void
+		{
+			useChromeColor = true;
+			super.initializationComplete();
+		}
+    </fx:Script>
+    
+    <!-- states -->
+	<s:states>
+		<s:State name="up" stateGroups="nonSelected"/>
+		<s:State name="over" stateGroups="nonSelected" />
+		<s:State name="down"  stateGroups="nonSelected" />
+		<s:State name="disabled"  stateGroups="nonSelected, disabledStates" />
+		<s:State name="upAndSelected" stateGroups="selectedStates" />
+		<s:State name="overAndSelected" stateGroups="selectedStates" />
+		<s:State name="downAndSelected" stateGroups="selectedStates" />
+		<s:State name="disabledAndSelected" stateGroups="selectedStates, disabledStates" />
+	</s:states>
+	
+	
+	<s:BitmapImage source="@Embed('/assets/tab_up.png', scaleGridTop='11', 
+				   scaleGridBottom='30', scaleGridLeft='10', scaleGridRight='92')"
+				   includeIn="up, over, down" width="{labelDisplayWidth}"/>
+	
+	<s:BitmapImage source="@Embed('/assets/tab_selected.png', scaleGridTop='13', 
+				   scaleGridBottom='31', scaleGridLeft='9', scaleGridRight='91')"
+				   includeIn="upAndSelected, overAndSelected, downAndSelected"
+				   width="{labelDisplayWidth}"/>
+    
+	
+	
+    <!-- layer 8: text -->
+    <!--- @copy spark.components.supportClasses.ButtonBase#labelDisplay -->
+	<s:HGroup id="hgTab" verticalAlign="middle" gap="3"
+			  left="10" right="20" top.selectedStates="0" top.nonSelected="-2" bottom="1"
+			  creationComplete="setTabWidth();">
+		
+		<s:BitmapImage source="@Embed('/assets/plus.png')" visible="false"/>
+		
+		<s:Label id="labelDisplay"
+				 textAlign="left"
+				 verticalAlign="middle"
+				 maxDisplayedLines="1"
+				 color="#333333" fontSize="12" fontFamily="arial" 
+				 fontWeight="bold" 
+				 color.upAndSelected="#003399" 
+				 color.overAndSelected="#003399" 
+				 color.over="#858585">
+		</s:Label>
+	</s:HGroup> 
+    
+</s:SparkSkin>

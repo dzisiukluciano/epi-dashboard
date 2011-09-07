@@ -7,7 +7,7 @@
 package com.esria.samples.dashboard.managers
 {
 import com.esria.samples.dashboard.events.LayoutChangeEvent;
-import com.esria.samples.dashboard.view.Pod;
+import com.esria.samples.dashboard.view.PodPanel;
 import flash.events.EventDispatcher;
 import flash.net.SharedObject;
 	
@@ -77,7 +77,7 @@ public class StateManager
 		var a:Array = new Array();
 		for (var i:Number = 0; i < len; i++)
 		{
-			a.push(Pod(podArray[i]).id);
+			a.push(PodPanel(podArray[i]).id);
 		}
 		
 		return a;

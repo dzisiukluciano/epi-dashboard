@@ -1,55 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application
-	xmlns:mx="http://www.adobe.com/2006/mxml"
-	horizontalAlign="left"
+<s:Application
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx"
 	minWidth="600" minHeight="600"
 	width="100%" height="100%"
-	backgroundSize="100%"
 	backgroundColor="#ffffff"
-	paddingLeft="45" paddingRight="45" paddingBottom="35" paddingTop="34"
-	applicationComplete="onApplicationComplete()">
+	skinClass="skins.CustomApplicationSkin"
+	xmlns:autoServices="autoServices.*"
+	applicationComplete="onApplicationComplete()" >
 	
-	<mx:Style source="/assets/styles.css" />
-	
+	<fx:Declarations>			
+		<s:CallResponder id="findAllTabsResult"/>
+		<autoServices:TabService id="tabService" 
+			fault="faultHandler(event.fault)" showBusyCursor="true"
+			result="findAllTabsResultHandler(event.result)" />
+	</fx:Declarations>
 		
-	<mx:RemoteObject id="tabService" source="tabRo" showBusyCursor="true">
-		<mx:method name="findAllTabs" result="findAllTabsResultHandler(event.result)" fault="faultHandler(event.fault)"/>
-	</mx:RemoteObject>
-		
 	
-	<mx:Script>
+	<fx:Script>
 		<![CDATA[
+			import autoServices.TabService;
+			
+			import autoValueObjects.Pod;
+			import autoValueObjects.Tab;
+			
 			import com.esria.samples.dashboard.events.LayoutChangeEvent;
 			import com.esria.samples.dashboard.managers.PodLayoutManager;
 			import com.esria.samples.dashboard.managers.StateManager;
 			import com.esria.samples.dashboard.view.ChartContent;
-			import com.esria.samples.dashboard.view.FormContent;
-			import com.esria.samples.dashboard.view.ListContent;
 			import com.esria.samples.dashboard.view.PieChartContent;
-			import com.esria.samples.dashboard.view.Pod;
 			import com.esria.samples.dashboard.view.PodContentBase;
+			import com.esria.samples.dashboard.view.PodPanel;
 			
 			import components.editTab;
 			
 			import flash.sampler.NewObjectSample;
 			
 			import mx.collections.ArrayCollection;
-			import mx.containers.Canvas;
 			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
 			import mx.core.IFlexDisplayObject;
 			import mx.events.FlexEvent;
 			import mx.events.IndexChangedEvent;
-			import mx.events.ItemClickEvent;
 			import mx.managers.PopUpManager;
 			import mx.rpc.Fault;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			import mx.rpc.http.HTTPService;
 			
-			import vo.Tab;
+			import spark.components.NavigatorContent;
+			import spark.events.IndexChangeEvent;
 			
-			[Embed(source='assets/plus.png')]
-			private static var plusIcon:Class;
+			import vo.TabContainer;
 			
 			// Array of PodLayoutManagers
 			private var podLayoutManagers:Array = new Array();
@@ -68,46 +71,31 @@
 			private function onApplicationComplete():void
 			{
 				//cargo la configuracion
-				tabService.findAllTabs;
-			}
-			
-			private function findAllTabsResultHandler(e:*):void{
-				var tabs:ArrayCollection = e as ArrayCollection;
-				
+				findAllTabsResult.token = tabService.findAllTabs();
 			}
 			
 			private function faultHandler(e:Fault):void{
-				Alert.show(e.message);
+				Alert.show(e.faultString + '\n' + e.faultDetail);
 			}
 			
-			private function onResultHttpService(e:ResultEvent):void
-			{
-				var viewXMLList:XMLList = e.result.view;
-				var len:Number = viewXMLList.length();
-				var containerWindowManagerHash:Object = new Object();
-				for (var i:Number = 0; i < len; i++) // Loop through the view nodes.
-				{
-					// Create a canvas for each view node.
-					var tab:Tab = new Tab();
-					// PodLayoutManager handles resize and should prevent the need for
-					// scroll bars so turn them off so they aren't visible during resizes.
-					tab.horizontalScrollPolicy = "off";
-					tab.verticalScrollPolicy = "off";
-					tab.label = viewXMLList[i].@label;
+			private function findAllTabsResultHandler(result:*):void{
+				var tabs:ArrayCollection = result as ArrayCollection;
+				for each (var t:Tab in tabs){
+					
+					var tab:TabContainer = new TabContainer();
+					tab.label = t.name;
 					tab.percentWidth = 100;
 					tab.percentHeight = 100;
-					//luego va a ser el id posta del objeto Tab
-					tab.id = viewXMLList[i].@id;
+					tab.id = t.id.toString();
 					viewStack.addChild(tab);
 					
 					// Create a manager for each view.
 					var manager:PodLayoutManager = new PodLayoutManager();
 					manager.container = tab;
-					//luego va a ser el id posta del objeto Tab
 					manager.id = tab.id;
 					manager.addEventListener(LayoutChangeEvent.UPDATE, StateManager.setPodLayout);
 					// Store the pod xml data. Used when view is first made visible.
-					podDataDictionary[manager] = viewXMLList[i].pod;
+					podDataDictionary[manager] = t.pods;
 					podLayoutManagers.push(manager);
 				}
 				
@@ -119,13 +107,14 @@
 				// Make sure the index is not out of range.
 				// This can happen if a tab view was saved but then tabs were subsequently removed from the XML.
 				index = Math.min(tabBar.numChildren - 1, index);
-				onItemClickTabBar(new ItemClickEvent(ItemClickEvent.ITEM_CLICK, false, false, null, index));
-				tabBar.selectedIndex = index;
+				onItemClickTabBar(new IndexChangeEvent(IndexChangeEvent.CHANGE, false, false, -1, index));
+				tabBar.selectedIndex = index;		
+				
 			}
 			
-			private function onItemClickTabBar(e:ItemClickEvent):void
+			private function onItemClickTabBar(e:IndexChangeEvent):void
 			{
-				var index:Number = e.index;
+				var index:Number = e.newIndex;
 				StateManager.setViewIndex(index); // Save the view index.
 				
 				viewStack.selectedIndex = index;
@@ -133,49 +122,45 @@
 				// If data exists then add the pods. After the pods have been added the data is cleared.
 				var podLayoutManager:PodLayoutManager = podLayoutManagers[index];
 				if (podDataDictionary[podLayoutManager] != null)
-					addPods(podLayoutManagers[index]);
+					addPods(podLayoutManager);
 			}
 			
 			// Adds the pods to a view.
 			private function addPods(manager:PodLayoutManager):void
 			{
 				// Loop through the pod nodes for each view node.
-				var podXMLList:XMLList = podDataDictionary[manager];
-				var podLen:Number = podXMLList.length();
+				var pods:ArrayCollection = podDataDictionary[manager];
+				var podLen:int = pods.length;
 				var unsavedPodCount:Number = 0;
-				for (var j:Number = 0; j < podLen; j++)
+				for each (var pod:Pod in pods)
 				{
 					// Figure out which type of pod content to use.
 					var podContent:PodContentBase = null;
-					if (podXMLList[j].@type == "chart")
+					if (pod.type.name == "chart")
 						podContent = new ChartContent();
-					else if (podXMLList[j].@type == "form")
-						podContent = new FormContent();
-					else if (podXMLList[j].@type == "list")
-						podContent = new ListContent();
-					else if (podXMLList[j].@type == "pieChart")
+					else if (pod.type.name == "pieChart")
 						podContent = new PieChartContent();
 					
 					if (podContent != null)
 					{
 						var viewId:String = manager.id;
-						var podId:String = podXMLList[j].@id;
+						var podId:String = pod.id.toString();
+						podContent.pod = pod;
 						
 						// Get the saved value for the pod content viewStack.
 						if (StateManager.getPodViewIndex(viewId, podId) != -1)
-							podXMLList[j].@selectedViewIndex = StateManager.getPodViewIndex(viewId, podId);
+							pod.selectedViewIndex = StateManager.getPodViewIndex(viewId, podId);
 						
-						podContent.properties = podXMLList[j];
-						var pod:Pod = new Pod();
-						pod.id = podId;
-						pod.title = podXMLList[j].@title;
-						pod.addChild(podContent);
+						var podPanel:PodPanel = new PodPanel();
+						podPanel.id = podId;
+						podPanel.title = pod.title;
+						podPanel.addElement(podContent);
 						var index:Number;
 						
 						if (StateManager.isPodMinimized(viewId, podId))
 						{
 							index = StateManager.getMinimizedPodIndex(viewId, podId);
-							manager.addMinimizedItemAt(pod, index);
+							manager.addMinimizedItemAt(podPanel, index);
 						}
 						else
 						{
@@ -188,12 +173,12 @@
 								unsavedPodCount += 1;
 							}
 							
-							manager.addItemAt(pod, index, StateManager.isPodMaximized(viewId, podId));
+							manager.addItemAt(podPanel, index, StateManager.isPodMaximized(viewId, podId));
 						}
 						
 						pod.addEventListener(IndexChangedEvent.CHANGE, onChangePodView);
 						
-						podHash[pod] = manager;
+						podHash[podPanel] = manager;
 					}
 				}
 				
@@ -201,8 +186,8 @@
 				delete podDataDictionary[manager];
 				
 				// Listen for the last pod to complete so the layout from the ContainerWindowManager is done correctly. 
-				if(pod!=null)
-					pod.addEventListener(FlexEvent.UPDATE_COMPLETE, onCreationCompletePod);
+				if(podPanel!=null)
+					podPanel.addEventListener(FlexEvent.UPDATE_COMPLETE, onCreationCompletePod);
 			}
 			
 			// Pod has been created so update the respective PodLayoutManager.
@@ -217,21 +202,21 @@
 			// Saves the pod content ViewStack state.
 			private function onChangePodView(e:IndexChangedEvent):void
 			{
-				var pod:Pod = Pod(e.currentTarget);
+				var pod:PodPanel = PodPanel(e.currentTarget);
 				var viewId:String = PodLayoutManager(podHash[pod]).id;
 				StateManager.setPodViewIndex(viewId, pod.id, e.newIndex);
 			}
 			
 			
 			
-			private function getCurrentTab():Tab{
+			private function getCurrentTab():TabContainer{
 				var index:Number = StateManager.getViewIndex();
 				index = Math.min(tabBar.numChildren - 1, index);
-				return viewStack.getChildAt(index) as Tab;
+				return viewStack.getChildAt(index) as TabContainer;
 			}
 						
 			private function configTab():void{
-				var tab:Canvas = getCurrentTab();
+				var tab:NavigatorContent = getCurrentTab();
 				
 				var popUp:editTab = editTab(PopUpManager.createPopUp(btnConfig, editTab,true));
 				popUp.addEventListener("saveTab",onSaveTab);
@@ -242,10 +227,10 @@
 			}
 			
 			private function onSaveTab(e:Event):void{
-				var tab:Tab = getCurrentTab();
+				var tab:TabContainer = getCurrentTab();
 				
 				//para que no se cebe agregando tabs
-				if((tabBar.width < 0.8*Application.application.width) && tab.newTab)
+				if((tabBar.width < 0.8* FlexGlobals.topLevelApplication.width) && tab.newTab)
 					agregarPestaniaNewTab();
 				
 				var edit:IFlexDisplayObject = e.target as IFlexDisplayObject;
@@ -274,7 +259,7 @@
 			}
 			
 			private function onDeleteTab(e:Event):void{
-				var tab:Tab = getCurrentTab();
+				var tab:TabContainer = getCurrentTab();
 				if(!tab.newTab){
 					viewStack.removeChild(tab);
 					var managers:Array = new Array();
@@ -290,12 +275,9 @@
 			
 			private function agregarPestaniaNewTab():void{
 				// ****** Creo la pestaña "New Tab" *************
-				var tab:Tab = new Tab();
+				var tab:TabContainer = new TabContainer();
 				tab.newTab = true;
-				tab.horizontalScrollPolicy = "off";
-				tab.verticalScrollPolicy = "off";
 				tab.label = "New Tab";
-				tab.icon = plusIcon;
 				tab.id = "newtabId";
 				tab.percentWidth = 100;
 				tab.percentHeight = 100;
@@ -311,13 +293,19 @@
 			}
 			
 		]]>
-	</mx:Script>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout horizontalAlign="left" paddingLeft="45" paddingRight="45" paddingBottom="35" paddingTop="34"/>
+	</s:layout>	
+
 	<mx:HBox width="100%">
-		<mx:TabBar
+		<s:TabBar
 			id="tabBar"
-			itemClick="onItemClickTabBar(event)"
+			change="onItemClickTabBar(event)"
+			skinClass="skins.CustomTabBarSkin"
 			height="35" 
-			dataProvider="viewStack" />	
+			dataProvider="{viewStack}" />	
 		<mx:Spacer width="100%"/>
 		<mx:LinkButton id="btnConfig" icon="@Embed(source='assets/config.png')" click="configTab()" toolTip="Configure current tab"/>
 	</mx:HBox>
@@ -325,4 +313,4 @@
 		id="viewStack"
 		paddingTop="15"
 		width="100%" height="100%" />
-</mx:Application>
+</s:Application>

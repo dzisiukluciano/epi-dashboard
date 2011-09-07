@@ -7,19 +7,23 @@ package com.esria.samples.dashboard.managers
 import com.esria.samples.dashboard.events.LayoutChangeEvent;
 import com.esria.samples.dashboard.events.PodStateChangeEvent;
 import com.esria.samples.dashboard.view.DragHighlight;
-import com.esria.samples.dashboard.view.Pod;
+import com.esria.samples.dashboard.view.PodPanel;
+
 import flash.events.EventDispatcher;
 import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import mx.containers.Canvas;
+
 import mx.core.Application;
+import mx.core.FlexGlobals;
 import mx.effects.Move;
 import mx.effects.Parallel;
 import mx.effects.Resize;
 import mx.effects.easing.Exponential;
 import mx.events.DragEvent;
 import mx.events.ResizeEvent;
+
+import spark.components.NavigatorContent;
 
 // Dispatched whenever the layout changes.
 [Event(name="update", type="com.esria.samples.dashboard.events.LayoutChangeEvent")]
@@ -29,17 +33,17 @@ public class PodLayoutManager extends EventDispatcher
 	public var id:String;
 	public var items:Array = new Array();					// Stores the pods which are not minimized.
 	public var minimizedItems:Array = new Array();			// Stores the minimized pods.
-	public var maximizedPod:Pod;
+	public var maximizedPod:PodPanel;
 	
 	private var dragHighlightItems:Array = new Array();		// Stores the highlight items used to designate a drop area.
 	private var gridPoints:Array = new Array();				// Stores the x,y of each pod in the grid.
 	
-	private var currentDragPod:Pod;							// The current pod which the user is dragging.
+	private var currentDragPod:PodPanel;							// The current pod which the user is dragging.
 	private var currentVisibleHighlight:DragHighlight;		// The current highlight that is visible while dragging.
 	private var currentDropIndex:Number;					// The index of where to drop the pod while dragging.
 	private var currentDragPodMove:Move;					// The move effect used to transition the pod after it is released from dragging.
 	
-	private var _container:Canvas;							// The container which holds all of the pods.
+	private var _container:NavigatorContent;							// The container which holds all of the pods.
 	
 	private var parallel:Parallel;							// The main effect container.
 	private var maximizeParallel:Parallel;
@@ -74,17 +78,17 @@ public class PodLayoutManager extends EventDispatcher
 	}
 	
 	// Sets the canvas which will hold the pods.
-	public function set container(canvas:Canvas):void
+	public function set container(canvas:NavigatorContent):void
 	{
 		_container = canvas;
 	}
 	
-	public function get container():Canvas
+	public function get container():NavigatorContent
 	{
 		return _container;
 	}
 	
-	public function addMinimizedItemAt(pod:Pod, index:Number):void
+	public function addMinimizedItemAt(pod:PodPanel, index:Number):void
 	{	
 		if (index == -1)
 			index = minimizedItems.length;
@@ -95,7 +99,7 @@ public class PodLayoutManager extends EventDispatcher
 		initItem(pod);
 	}
 	
-	public function addItemAt(pod:Pod, index:Number, maximized:Boolean):void
+	public function addItemAt(pod:PodPanel, index:Number, maximized:Boolean):void
 	{	
 		if (maximized)
 		{
@@ -107,9 +111,9 @@ public class PodLayoutManager extends EventDispatcher
 		initItem(pod);
 	}
 	
-	private function initItem(pod:Pod):void
+	private function initItem(pod:PodPanel):void
 	{
-		container.addChild(pod);
+		container.addElement(pod);
 		
 		pod.addEventListener(DragEvent.DRAG_START, onDragStartPod);
 		pod.addEventListener(DragEvent.DRAG_COMPLETE, onDragCompletePod);
@@ -121,13 +125,13 @@ public class PodLayoutManager extends EventDispatcher
 		var dragHighlight:DragHighlight = new DragHighlight();
 		dragHighlight.visible = false;
 		dragHighlightItems.push(dragHighlight);
-		container.addChild(dragHighlight);
+		container.addElement(dragHighlight);
 	}
 	
 	// Pod has been maximized.
 	private function onMaximizePod(e:PodStateChangeEvent):void
 	{
-		var pod:Pod = Pod(e.currentTarget);
+		var pod:PodPanel = PodPanel(e.currentTarget);
 		maximizeParallel = new Parallel();
 		maximizeParallel.duration = 1000;
 		addResizeAndMoveToParallel(pod, maximizeParallel, availablePodWidth, availableMaximizedPodHeight, 0, 0);
@@ -143,11 +147,11 @@ public class PodLayoutManager extends EventDispatcher
 		if (maximizeParallel != null && maximizeParallel.isPlaying)
 			maximizeParallel.pause();
 		
-		var pod:Pod = Pod(e.currentTarget);
+		var pod:PodPanel = PodPanel(e.currentTarget);
 		items.splice(pod.index, 1);
 		
 		// Pod was previously maximized so there isn't a minimized pod anymore.
-		if (pod.windowState == Pod.WINDOW_STATE_MAXIMIZED)
+		if (pod.windowState == PodPanel.WINDOW_STATE_MAXIMIZED)
 			maximizedPod = null;
 				
 		minimizedItems.push(pod);
@@ -160,8 +164,8 @@ public class PodLayoutManager extends EventDispatcher
 	// Pod has been restored.
 	private function onRestorePod(e:PodStateChangeEvent):void
 	{
-		var pod:Pod = Pod(e.currentTarget);
-		if (pod.windowState == Pod.WINDOW_STATE_MAXIMIZED) // Current state is maximized
+		var pod:PodPanel = PodPanel(e.currentTarget);
+		if (pod.windowState == PodPanel.WINDOW_STATE_MAXIMIZED) // Current state is maximized
 		{
 			if (maximizeParallel != null && maximizeParallel.isPlaying)
 				maximizeParallel.pause();
@@ -172,7 +176,7 @@ public class PodLayoutManager extends EventDispatcher
 			addResizeAndMoveToParallel(pod, maximizeParallel, itemWidth, itemHeight, point.x, point.y);
 			maximizeParallel.play();
 		}
-		else if (pod.windowState == Pod.WINDOW_STATE_MINIMIZED) // Current state is minimized so add it back to the display.
+		else if (pod.windowState == PodPanel.WINDOW_STATE_MINIMIZED) // Current state is minimized so add it back to the display.
 		{
 			var len:Number = minimizedItems.length;
 			for (var i:Number = 0; i < len; i++)
@@ -198,11 +202,11 @@ public class PodLayoutManager extends EventDispatcher
 	
 	private function onDragStartPod(e:DragEvent):void
 	{
-		currentDragPod = Pod(e.currentTarget);
+		currentDragPod = PodPanel(e.currentTarget);
 		var len:Number = items.length;
 		for (var i:Number = 0; i < len; i++) // Find the current drop index so we have a start point.
 		{
-			if (Pod(items[i]) == currentDragPod)
+			if (PodPanel(items[i]) == currentDragPod)
 			{
 				currentDropIndex = i;
 				break;
@@ -210,12 +214,12 @@ public class PodLayoutManager extends EventDispatcher
 		}
 		
 		// Use the stage so we get mouse events outside of the browser window.
-		Application.application.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+		FlexGlobals.topLevelApplication.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 	}
 	
 	private function onDragCompletePod(e:DragEvent):void
 	{
-		Application.application.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+		FlexGlobals.topLevelApplication.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		
 		if (currentVisibleHighlight != null)
 			currentVisibleHighlight.visible = false;
@@ -285,7 +289,7 @@ public class PodLayoutManager extends EventDispatcher
 				var targetX:Number;
 				var targetY:Number;
 				var point:Point;
-				var pod:Pod = Pod(items[i]);
+				var pod:PodPanel = PodPanel(items[i]);
 				
 				var index:Number;
 				if (i != currentDropIndex)
@@ -341,7 +345,7 @@ public class PodLayoutManager extends EventDispatcher
 		var numRows:Number = Math.ceil(len / numCols);
 		var col:Number = 0;
 		var row:Number = 0;
-		var pod:Pod;
+		var pod:PodPanel;
 		itemWidth = Math.round(availablePodWidth / numCols - ((POD_GAP * (numCols - 1)) / numCols));
 		itemHeight = Math.round(availablePodHeight / numRows - ((POD_GAP * (numRows - 1)) / numRows));
 		
@@ -379,7 +383,7 @@ public class PodLayoutManager extends EventDispatcher
 			targetY = Math.round(targetY);
 			
 			pod = items[i];
-			if (pod.windowState == Pod.WINDOW_STATE_MAXIMIZED)// Window is maximized so do not include in the grid
+			if (pod.windowState == PodPanel.WINDOW_STATE_MAXIMIZED)// Window is maximized so do not include in the grid
 			{
 				if (tween)
 				{
@@ -393,7 +397,7 @@ public class PodLayoutManager extends EventDispatcher
 				
 				// Move the pod to the top of the z-index. It will not be at the top if we are coming from a saved state
 				// and the pod is not the last one.
-				container.setChildIndex(pod, container.numChildren - 1);
+				container.setElementIndex(pod, container.numElements - 1);
 			}
 			else
 			{
@@ -429,12 +433,12 @@ public class PodLayoutManager extends EventDispatcher
 			
 			for (i = 0; i < len; i++)
 			{
-				pod = Pod(minimizedItems[i]);
-				pod.height = Pod.MINIMIZED_HEIGHT;
+				pod = PodPanel(minimizedItems[i]);
+				pod.height = PodPanel.MINIMIZED_HEIGHT;
 				targetX = i * (TASKBAR_HORIZONTAL_GAP + minimizedItemWidth);
 				if (tween)
 				{
-					addResizeAndMoveToParallel(pod, parallel, minimizedItemWidth, Pod.MINIMIZED_HEIGHT, targetX, minimizedPodY);
+					addResizeAndMoveToParallel(pod, parallel, minimizedItemWidth, PodPanel.MINIMIZED_HEIGHT, targetX, minimizedPodY);
 				}
 				else
 				{
@@ -468,13 +472,13 @@ public class PodLayoutManager extends EventDispatcher
 				dragHighlight.y = point.y;
 				dragHighlight.width = itemWidth;
 				dragHighlight.height = itemHeight;
-				container.setChildIndex(dragHighlight, i); // Move the hightlights to the bottom of the z-index.
+				container.setElementIndex(dragHighlight, i); // Move the hightlights to the bottom of the z-index.
 			}
 		}
 	}
 	
 	// Creates a resize and move event and adds them to a parallel effect.
-	private function addResizeAndMoveToParallel(target:Pod, parallel:Parallel, widthTo:Number, heightTo:Number, xTo:Number, yTo:Number):void
+	private function addResizeAndMoveToParallel(target:PodPanel, parallel:Parallel, widthTo:Number, heightTo:Number, xTo:Number, yTo:Number):void
 	{
 		var resize:Resize = new Resize(target);
 		resize.widthTo = widthTo;

@@ -17,7 +17,7 @@ public class Pod {
 	@Column(nullable = false)
 	private String dataSource;
 	
-	private int selectedViewIndex;
+	private Integer selectedViewIndex;
 	
 	@Column(nullable = false)
 	private String valueField;
