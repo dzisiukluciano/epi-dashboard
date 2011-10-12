@@ -10,14 +10,15 @@ import autoValueObjects.Pod;
 
 import flash.xml.XMLNode;
 
+import spark.components.VGroup;
+
 import mx.collections.ArrayCollection;
-import mx.containers.VBox;
 import mx.controls.Alert;
 import mx.events.FlexEvent;
 import mx.events.IndexChangedEvent;
 import mx.utils.ObjectProxy;
 
-public class PodContentBase extends VBox
+public class PodContentBase extends VGroup
 {
 	[Bindable]
 	public var pod:Pod;

@@ -68,6 +68,8 @@
 			//Permisos
 			private var permisoAddTabs:Boolean = true;
 			
+			private var maxTabReached:Boolean = false;
+			
 			private function onApplicationComplete():void
 			{
 				//cargo la configuracion
@@ -100,13 +102,13 @@
 				}
 				
 				if(permisoAddTabs){
-					agregarPestaniaNewTab()
+					agregarPestaniaNewTab();
 				}
 				
 				var index:Number = StateManager.getViewIndex();
 				// Make sure the index is not out of range.
 				// This can happen if a tab view was saved but then tabs were subsequently removed from the XML.
-				index = Math.min(tabBar.numChildren - 1, index);
+				index = Math.min(viewStack.numChildren - 1, index);
 				onItemClickTabBar(new IndexChangeEvent(IndexChangeEvent.CHANGE, false, false, -1, index));
 				tabBar.selectedIndex = index;		
 				
@@ -211,7 +213,7 @@
 			
 			private function getCurrentTab():TabContainer{
 				var index:Number = StateManager.getViewIndex();
-				index = Math.min(tabBar.numChildren - 1, index);
+				index = Math.min(viewStack.numChildren - 1, index);
 				return viewStack.getChildAt(index) as TabContainer;
 			}
 						
@@ -229,7 +231,7 @@
 			private function onSaveTab(e:Event):void{
 				var tab:TabContainer = getCurrentTab();
 				
-				//para que no se cebe agregando tabs
+				//para que no se cebe agregando tabs, lo limito al 80% del container
 				if((tabBar.width < 0.8* FlexGlobals.topLevelApplication.width) && tab.newTab)
 					agregarPestaniaNewTab();
 				
@@ -298,7 +300,7 @@
 	<s:layout>
 		<s:VerticalLayout horizontalAlign="left" paddingLeft="45" paddingRight="45" paddingBottom="35" paddingTop="34"/>
 	</s:layout>	
-
+	
 	<mx:HBox width="100%">
 		<s:TabBar
 			id="tabBar"
