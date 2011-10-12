@@ -5,16 +5,23 @@
     xmlns:s="library://ns.adobe.com/flex/spark" 
     xmlns:fb="http://ns.adobe.com/flashbuilder/2009" 
     minWidth="21" minHeight="21" alpha.disabledStates="0.5">
-    <fx:Metadata>[HostComponent("spark.skins.spark.TabBarButtonSkin")]</fx:Metadata>
+    <fx:Metadata>[HostComponent("spark.components.ButtonBarButton")]</fx:Metadata>
     
     <!-- host component -->
     <fx:Script fb:purpose="styling">
 		     
 		[Bindable] private var labelDisplayWidth:Number = 0;
 		
+		private function onCreationCompleteTab():void{			
+			var dataObj:Object = hostComponent.data;
+			plusIcon.source = dataObj.icon;
+			
+			callLater(setTabWidth);
+		}
+		
 		private function setTabWidth():void{
-			labelDisplayWidth = hgTab.width + hgTab.left 
-				+ hgTab.right + 3;
+			labelDisplayWidth = labelDisplay.width + hgTab.left 
+				+ hgTab.right + plusIcon.width;
 		}
         
 		static private const exclusions:Array = ["labelDisplay"];
@@ -55,10 +62,10 @@
     <!-- layer 8: text -->
     <!--- @copy spark.components.supportClasses.ButtonBase#labelDisplay -->
 	<s:HGroup id="hgTab" verticalAlign="middle" gap="3"
-			  left="10" right="20" top.selectedStates="0" top.nonSelected="-2" bottom="1"
-			  creationComplete="setTabWidth();">
+			  left="10" right="15" top.selectedStates="0" top.nonSelected="-2" bottom="1"
+			  creationComplete="onCreationCompleteTab();">
 		
-		<s:BitmapImage source="@Embed('/assets/plus.png')" visible="false"/>
+		<s:BitmapImage id="plusIcon"/>
 		
 		<s:Label id="labelDisplay"
 				 textAlign="left"
@@ -68,7 +75,8 @@
 				 fontWeight="bold" 
 				 color.upAndSelected="#003399" 
 				 color.overAndSelected="#003399" 
-				 color.over="#858585">
+				 color.over="#858585"
+				 updateComplete="onCreationCompleteTab();">
 		</s:Label>
 	</s:HGroup> 
     
