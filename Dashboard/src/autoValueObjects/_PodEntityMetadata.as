@@ -20,12 +20,12 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("id", "title", "dataSource", "valueField", "selectedViewIndex", "type", "categoryField");
+    model_internal static var allProperties:Array = new Array("id", "dataSource", "title", "valueField", "type", "categoryField");
     model_internal static var allAssociationProperties:Array = new Array();
     model_internal static var allRequiredProperties:Array = new Array();
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("id", "title", "dataSource", "valueField", "selectedViewIndex", "type", "categoryField");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("id", "dataSource", "title", "valueField", "type", "categoryField");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("id", "title", "dataSource", "valueField", "selectedViewIndex", "type", "categoryField");
+    model_internal static var dataProperties:Array = new Array("id", "dataSource", "title", "valueField", "type", "categoryField");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -45,10 +45,9 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
             // depenents map
             model_internal::dependentsOnMap = new Object();
             model_internal::dependentsOnMap["id"] = new Array();
-            model_internal::dependentsOnMap["title"] = new Array();
             model_internal::dependentsOnMap["dataSource"] = new Array();
+            model_internal::dependentsOnMap["title"] = new Array();
             model_internal::dependentsOnMap["valueField"] = new Array();
-            model_internal::dependentsOnMap["selectedViewIndex"] = new Array();
             model_internal::dependentsOnMap["type"] = new Array();
             model_internal::dependentsOnMap["categoryField"] = new Array();
 
@@ -272,25 +271,19 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTitleAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get isDataSourceAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isValueFieldAvailable():Boolean
+    public function get isTitleAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isSelectedViewIndexAvailable():Boolean
+    public function get isValueFieldAvailable():Boolean
     {
         return true;
     }
@@ -324,25 +317,19 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     }
 
     [Bindable(event="propertyChange")]   
-    public function get titleStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get dataSourceStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get valueFieldStyle():com.adobe.fiber.styles.Style
+    public function get titleStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get selectedViewIndexStyle():com.adobe.fiber.styles.Style
+    public function get valueFieldStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }

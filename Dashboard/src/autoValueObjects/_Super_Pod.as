@@ -48,10 +48,9 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
      * properties
      */
     private var _internal_id : Number;
-    private var _internal_title : String;
     private var _internal_dataSource : String;
+    private var _internal_title : String;
     private var _internal_valueField : String;
-    private var _internal_selectedViewIndex : int;
     private var _internal_type : autoValueObjects.PodType;
     private var _internal_categoryField : String;
 
@@ -84,27 +83,21 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
     }
 
     [Bindable(event="propertyChange")]
-    public function get title() : String
-    {
-        return _internal_title;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get dataSource() : String
     {
         return _internal_dataSource;
     }
 
     [Bindable(event="propertyChange")]
-    public function get valueField() : String
+    public function get title() : String
     {
-        return _internal_valueField;
+        return _internal_title;
     }
 
     [Bindable(event="propertyChange")]
-    public function get selectedViewIndex() : int
+    public function get valueField() : String
     {
-        return _internal_selectedViewIndex;
+        return _internal_valueField;
     }
 
     [Bindable(event="propertyChange")]
@@ -133,16 +126,6 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
         }
     }
 
-    public function set title(value:String) : void
-    {
-        var oldValue:String = _internal_title;
-        if (oldValue !== value)
-        {
-            _internal_title = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "title", oldValue, _internal_title));
-        }
-    }
-
     public function set dataSource(value:String) : void
     {
         var oldValue:String = _internal_dataSource;
@@ -153,6 +136,16 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
         }
     }
 
+    public function set title(value:String) : void
+    {
+        var oldValue:String = _internal_title;
+        if (oldValue !== value)
+        {
+            _internal_title = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "title", oldValue, _internal_title));
+        }
+    }
+
     public function set valueField(value:String) : void
     {
         var oldValue:String = _internal_valueField;
@@ -160,16 +153,6 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
         {
             _internal_valueField = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "valueField", oldValue, _internal_valueField));
-        }
-    }
-
-    public function set selectedViewIndex(value:int) : void
-    {
-        var oldValue:int = _internal_selectedViewIndex;
-        if (oldValue !== value)
-        {
-            _internal_selectedViewIndex = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "selectedViewIndex", oldValue, _internal_selectedViewIndex));
         }
     }
 

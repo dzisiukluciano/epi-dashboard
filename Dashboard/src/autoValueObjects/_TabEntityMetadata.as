@@ -21,12 +21,12 @@ internal class _TabEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("id", "name", "pods");
+    model_internal static var allProperties:Array = new Array("id", "pods", "name");
     model_internal static var allAssociationProperties:Array = new Array();
     model_internal static var allRequiredProperties:Array = new Array();
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("id", "name", "pods");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("id", "pods", "name");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("id", "name", "pods");
+    model_internal static var dataProperties:Array = new Array("id", "pods", "name");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array("pods");
     model_internal static var collectionBaseMap:Object;
@@ -46,8 +46,8 @@ internal class _TabEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
             // depenents map
             model_internal::dependentsOnMap = new Object();
             model_internal::dependentsOnMap["id"] = new Array();
-            model_internal::dependentsOnMap["name"] = new Array();
             model_internal::dependentsOnMap["pods"] = new Array();
+            model_internal::dependentsOnMap["name"] = new Array();
 
             // collection base map
             model_internal::collectionBaseMap = new Object()
@@ -270,13 +270,13 @@ internal class _TabEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     }
 
     [Bindable(event="propertyChange")]
-    public function get isNameAvailable():Boolean
+    public function get isPodsAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isPodsAvailable():Boolean
+    public function get isNameAvailable():Boolean
     {
         return true;
     }
@@ -298,13 +298,13 @@ internal class _TabEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     }
 
     [Bindable(event="propertyChange")]   
-    public function get nameStyle():com.adobe.fiber.styles.Style
+    public function get podsStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get podsStyle():com.adobe.fiber.styles.Style
+    public function get nameStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
