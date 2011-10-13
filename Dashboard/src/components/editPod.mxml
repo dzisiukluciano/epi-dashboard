@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  gap="0"
+		  xmlns:components="components.*">
+	<fx:Script>
+		<![CDATA[
+			import autoValueObjects.Pod;
+			
+			import mx.binding.utils.BindingUtils;
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			public var pods:ArrayCollection;		
+	
+			
+			public function editPodFunction(pod:Pod, container:podButton):void{			
+				podDtd.visible = true;
+				podDtd.pod = pod;
+				podDtd.container = container;
+			}
+			
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:Fade id="showEffect" alphaFrom="0" alphaTo="1" duration="400"/>
+		<s:Fade id="hideEffect" alphaFrom="1" alphaTo="0" duration="100"/>
+	</fx:Declarations>	
+	
+	<components:podDetail id="podDtd" visible="false" height="{podlst.height}" showEffect="showEffect"/>
+	
+	<components:podList id="podlst" cancel="{PopUpManager.removePopUp(this)}" pods="{this.pods}" editPodFunction="{editPodFunction}"/>	
+</s:HGroup>

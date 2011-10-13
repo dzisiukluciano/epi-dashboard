@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  xmlns:autoServices="autoServices.*"
+		  creationComplete="init()" 
+		  paddingTop="10"
+		  paddingBottom="3"
+		  paddingRight="7"
+		  paddingLeft="5"
+		  gap="10"
+		  horizontalAlign="right">
+
+	<fx:Script>
+		<![CDATA[
+			import autoValueObjects.Pod;
+			import autoValueObjects.PodType;
+			
+			import mx.binding.utils.BindingUtils;
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			
+			[Bindable]
+			private var podTypes:ArrayCollection;
+			
+			[Bindable]
+			public var pod:Pod;
+			[Bindable]
+			public var container:podButton;
+			
+			private function init():void{
+				retrievePodTypesResult.token = podService.retrievePodTypes();
+				BindingUtils.bindSetter(setValues,this,"pod");
+			}
+			
+			private function setValues(pod:Pod):void{
+				cleanAll();
+				if(pod!=null){
+					this.txtTitle.text = pod.title;
+					this.txtDataSource.text = pod.dataSource;
+					this.txtValueField.text = pod.valueField;
+					this.txtCategoryField.text = pod.categoryField;
+					this.cmbType.selectedItem = null;
+					for each (var podType:PodType in cmbType.dataProvider){
+						if(pod.type != null && podType.name == pod.type.name)
+							this.cmbType.selectedItem = podType;
+					}
+				}
+			}
+			
+			public function retrievePodTypesResultHandler(result:*):void{
+				podTypes = result as ArrayCollection;
+			}
+			
+			private function save():void{
+				var campos:String = "";
+				if(txtTitle.text == null || txtTitle.text.length == 0)
+					campos += "\nTitle";
+				if(txtDataSource.text == null || txtDataSource.text.length == 0)
+					campos += "\nData Source";
+				if(txtValueField.text == null || txtValueField.text.length == 0)
+					campos += "\nValue Field";
+				if(txtCategoryField.text == null || txtCategoryField.text.length == 0)
+					campos += "\nCategory Field";
+				if(cmbType.selectedItem == null)
+					campos += "\nPod Type";
+				
+				if(campos.length>0){
+					Alert.show("Complete the following fields:"+campos,"Required data");
+				}else{
+					var newPod:Pod = this.pod;
+					if(this.pod == null)
+						newPod = new Pod();
+					
+				
+					newPod.title = this.txtTitle.text;
+					newPod.dataSource = this.txtDataSource.text;
+					newPod.valueField = this.txtValueField.text;
+					newPod.categoryField = this.txtCategoryField.text;
+					newPod.type = this.cmbType.selectedItem;
+					this.visible = false;
+					
+					container.pod = newPod;
+					this.pod = newPod;
+				}
+			}
+			
+			private function cancel():void{
+				this.visible = false;
+				this.pod = null;
+			}
+			
+			private function cleanAll():void{
+				this.txtTitle.text = "";
+				this.txtDataSource.text = "";
+				this.txtValueField.text = "";
+				this.txtCategoryField.text = "";
+				this.cmbType.selectedItem = null;
+			}
+			
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:CallResponder id="retrievePodTypesResult"/>
+		<autoServices:PodService id="podService" 
+								 fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+								 result="retrievePodTypesResultHandler(event.result)" 
+								 showBusyCursor="true"/>
+	</fx:Declarations>
+	
+	<mx:Spacer height="100%"/>
+	<mx:FormItem label="Title:" fontWeight="bold" required="true">			
+		<mx:TextInput id="txtTitle" width="150" maxChars="30"/>
+	</mx:FormItem>
+	<mx:FormItem label="Pod type:" fontWeight="bold" required="true">			
+		<s:DropDownList id="cmbType" dataProvider="{podTypes}" labelField="name" 
+						width="150" prompt="Select"/>
+	</mx:FormItem>
+	<mx:FormItem label="Data source:" fontWeight="bold" required="true">			
+		<mx:TextInput id="txtDataSource" width="150"/>
+	</mx:FormItem>
+	<mx:FormItem label="Value field:" fontWeight="bold" required="true">			
+		<mx:TextInput id="txtValueField" width="150"/>
+	</mx:FormItem>
+	<mx:FormItem label="Category field:" fontWeight="bold" required="true">			
+		<mx:TextInput id="txtCategoryField" width="150"/>
+	</mx:FormItem>
+	
+	<mx:Spacer height="100%"/>
+	
+	<mx:HBox width="100%" horizontalAlign="right" paddingTop="15">
+		<mx:Button label="Save" icon="@Embed(source='../assets/save.png')" click="save()"/>
+		<mx:Button label="Cancel" icon="@Embed(source='../assets/cancel.png')" click="cancel()"/>
+	</mx:HBox>
+	
+</s:VGroup>
