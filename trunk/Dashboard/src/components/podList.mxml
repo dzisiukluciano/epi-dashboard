@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				title="Pods Configuration" 
+				creationComplete="init()">
+
+	<fx:Metadata>
+		[Event(name="cancel", type="flash.events.Event")]
+	</fx:Metadata>
+	
+	<fx:Script>
+		<![CDATA[
+			import autoValueObjects.Pod;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.LinkButton;
+			import mx.events.FlexEvent;
+			
+			import spark.components.HGroup;
+
+			[Bindable]
+			public var pods:ArrayCollection;
+			[Bindable]
+			public var editPodFunction:Function;
+			
+			[Embed(source='../assets/trash.png')]
+			private var trashIcon:Class;
+			
+			
+			public function init():void{	
+				for(var i:int = 0; i<8; i++){
+					var podComponent:podButton = new podButton();
+					if(pods != null && pods.length > i){
+						podComponent.pod = Pod(pods.getItemAt(i));
+					}
+					podComponent.onClickFunction = editPodFunction;					
+					container.addElement(podComponent);				
+				}				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:VGroup width="100%" height="100%" paddingTop="10">
+		<s:VGroup id="container"/>
+		
+		<mx:HBox width="100%" horizontalAlign="right" paddingTop="25">
+			<mx:Button label="Save" icon="@Embed(source='../assets/save.png')"/>
+			<mx:Button label="Cancel" icon="@Embed(source='../assets/cancel.png')" click="{dispatchEvent(new Event('cancel'));}"/>
+		</mx:HBox>
+		
+	</s:VGroup>
+	
+</mx:TitleWindow>
