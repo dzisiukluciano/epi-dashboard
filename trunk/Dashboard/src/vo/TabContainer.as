@@ -1,6 +1,8 @@
 package vo
 {
 	
+	import autoValueObjects.Tab;
+	
 	import spark.components.NavigatorContent;
 
 	public class TabContainer extends NavigatorContent
@@ -13,6 +15,8 @@ package vo
 		private var plusIcon:Class;
 		
 		private var _newTab:Boolean = false;
+		
+		public var tab:Tab;
 		
 		public function set newTab(value:Boolean):void{
 			this._newTab = value;
