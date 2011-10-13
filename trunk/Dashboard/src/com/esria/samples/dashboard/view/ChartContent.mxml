@@ -53,10 +53,10 @@
 				dataProvider = result as ArrayCollection;
 				
 				// Get the values from properties XML.
-				if (pod.selectedViewIndex.toString() != null &&
-					Number(pod.selectedViewIndex) < viewStack.numChildren) // Make sure the index is in range.
-					selectedViewIndex = Number(pod.selectedViewIndex);
-				else
+//				if (pod.selectedViewIndex.toString() != null &&
+//					Number(pod.selectedViewIndex) < viewStack.numChildren) // Make sure the index is in range.
+//					selectedViewIndex = Number(pod.selectedViewIndex);
+//				else
 					selectedViewIndex = 0;
 				
 				columnChart.addEventListener(ChartItemEvent.ITEM_CLICK, drillDown);
