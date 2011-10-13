@@ -50,9 +50,9 @@ public class _Super_Tab extends flash.events.EventDispatcher implements com.adob
      * properties
      */
     private var _internal_id : Number;
-    private var _internal_name : String;
     private var _internal_pods : ArrayCollection;
     model_internal var _internal_pods_leaf:autoValueObjects.Pod;
+    private var _internal_name : String;
 
     private static var emptyArray:Array = new Array();
 
@@ -83,15 +83,15 @@ public class _Super_Tab extends flash.events.EventDispatcher implements com.adob
     }
 
     [Bindable(event="propertyChange")]
-    public function get name() : String
-    {
-        return _internal_name;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get pods() : ArrayCollection
     {
         return _internal_pods;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get name() : String
+    {
+        return _internal_name;
     }
 
     /**
@@ -105,16 +105,6 @@ public class _Super_Tab extends flash.events.EventDispatcher implements com.adob
         {
             _internal_id = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "id", oldValue, _internal_id));
-        }
-    }
-
-    public function set name(value:String) : void
-    {
-        var oldValue:String = _internal_name;
-        if (oldValue !== value)
-        {
-            _internal_name = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "name", oldValue, _internal_name));
         }
     }
 
@@ -136,6 +126,16 @@ public class _Super_Tab extends flash.events.EventDispatcher implements com.adob
                 throw new Error("value of pods must be a collection");
             }
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "pods", oldValue, _internal_pods));
+        }
+    }
+
+    public function set name(value:String) : void
+    {
+        var oldValue:String = _internal_name;
+        if (oldValue !== value)
+        {
+            _internal_name = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "name", oldValue, _internal_name));
         }
     }
 
