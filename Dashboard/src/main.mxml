@@ -85,6 +85,7 @@
 				for each (var t:Tab in tabs){
 					
 					var tab:TabContainer = new TabContainer();
+					tab.tab = t;
 					tab.label = t.name;
 					tab.percentWidth = 100;
 					tab.percentHeight = 100;
@@ -149,9 +150,9 @@
 						var podId:String = pod.id.toString();
 						podContent.pod = pod;
 						
-						// Get the saved value for the pod content viewStack.
-						if (StateManager.getPodViewIndex(viewId, podId) != -1)
-							pod.selectedViewIndex = StateManager.getPodViewIndex(viewId, podId);
+						// Get the saved value for the pod content viewStack.0
+//						if (StateManager.getPodViewIndex(viewId, podId) != -1)
+//							pod.selectedViewIndex = StateManager.getPodViewIndex(viewId, podId);
 						
 						var podPanel:PodPanel = new PodPanel();
 						podPanel.id = podId;
@@ -218,11 +219,12 @@
 			}
 						
 			private function configTab():void{
-				var tab:NavigatorContent = getCurrentTab();
+				var tab:TabContainer = getCurrentTab();
 				
 				var popUp:editTab = editTab(PopUpManager.createPopUp(btnConfig, editTab,true));
 				popUp.addEventListener("saveTab",onSaveTab);
 				popUp.addEventListener("deleteTab",onDeleteTab);
+				popUp.tab = tab.tab;
 				popUp.txtTabName.text = tab.label;
 				PopUpManager.centerPopUp(popUp);
 				popUp.x = popUp.x - popUp.width;
@@ -231,13 +233,15 @@
 			private function onSaveTab(e:Event):void{
 				var tab:TabContainer = getCurrentTab();
 				
-				//para que no se cebe agregando tabs, lo limito al 80% del container
-				if((tabBar.width < 0.8* FlexGlobals.topLevelApplication.width) && tab.newTab)
+				//para que no se cebe agregando tabs, lo limito al 70% de la pantalla
+				if(tabBar.width > 0.7* FlexGlobals.topLevelApplication.width)
+					maxTabReached = true;
+				
+				if(!maxTabReached && tab.newTab)
 					agregarPestaniaNewTab();
 				
 				var edit:IFlexDisplayObject = e.target as IFlexDisplayObject;
 				tab.label = editTab(edit).txtTabName.text;
-				tab.icon = null;
 				
 				//random string para salir del paso
 				var a:String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -262,6 +266,7 @@
 			
 			private function onDeleteTab(e:Event):void{
 				var tab:TabContainer = getCurrentTab();
+				
 				if(!tab.newTab){
 					viewStack.removeChild(tab);
 					var managers:Array = new Array();
@@ -272,7 +277,15 @@
 					}
 					podLayoutManagers = managers;
 					PopUpManager.removePopUp(e.target as IFlexDisplayObject);
+					
+					if(tabBar.width < 0.70* FlexGlobals.topLevelApplication.width && maxTabReached){
+						agregarPestaniaNewTab();
+						maxTabReached = false;
+					}
+				}else{
+					Alert.show("Can not delete a new tab","Invalid operation");
 				}
+				
 			}
 			
 			private function agregarPestaniaNewTab():void{
@@ -281,6 +294,7 @@
 				tab.newTab = true;
 				tab.label = "New Tab";
 				tab.id = "newtabId";
+				tab.tab = new Tab();
 				tab.percentWidth = 100;
 				tab.percentHeight = 100;
 				viewStack.addChild(tab);
@@ -290,7 +304,7 @@
 				managr.id = "newTabId";
 				managr.addEventListener(LayoutChangeEvent.UPDATE, StateManager.setPodLayout);
 				// Store the pod data. Used when view is first made visible.
-				podDataDictionary[managr] = new XMLList();
+//				podDataDictionary[managr] = new XMLList();
 				podLayoutManagers.push(managr);
 			}
 			
@@ -309,7 +323,8 @@
 			height="35" 
 			dataProvider="{viewStack}" />	
 		<mx:Spacer width="100%"/>
-		<mx:LinkButton id="btnConfig" icon="@Embed(source='assets/config.png')" click="configTab()" toolTip="Configure current tab"/>
+		<mx:LinkButton id="btnConfig" icon="@Embed(source='assets/config.png')"
+					   click="configTab()" width="30" toolTip="Configure current tab" paddingTop="3"/>
 	</mx:HBox>
 	<mx:ViewStack
 		id="viewStack"
