@@ -2,22 +2,18 @@ package com.epidataconsulting.metrics.server.domain;
 
 import javax.persistence.*;
 
+import com.epidataconsulting.metrics.common.domain.AbstractDomain;
+
 
 @Entity
 @Table(name = "pods")
-public class Pod {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+public class Pod extends AbstractDomain{
 	
 	@Column(nullable = false)
 	private String title;
 	
 	@Column(nullable = false)
 	private String dataSource;
-	
-	private Integer selectedViewIndex;
 	
 	@Column(nullable = false)
 	private String valueField;
@@ -29,15 +25,6 @@ public class Pod {
 	@JoinColumn(name="type_id", nullable = false)
 	private PodType type;
 
-	
-	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getTitle() {
 		return title;
@@ -53,14 +40,6 @@ public class Pod {
 
 	public void setDataSource(String dataSource) {
 		this.dataSource = dataSource;
-	}
-
-	public int getSelectedViewIndex() {
-		return selectedViewIndex;
-	}
-
-	public void setSelectedViewIndex(int selectedViewIndex) {
-		this.selectedViewIndex = selectedViewIndex;
 	}
 
 	public String getValueField() {
