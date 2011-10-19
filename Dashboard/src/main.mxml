@@ -84,8 +84,7 @@
 				var tabs:ArrayCollection = result as ArrayCollection;
 				for each (var t:Tab in tabs){
 					
-					var tab:TabContainer = new TabContainer();
-					tab.tab = t;
+					var tab:TabContainer = new TabContainer(t);
 					tab.label = t.name;
 					tab.percentWidth = 100;
 					tab.percentHeight = 100;
@@ -219,18 +218,23 @@
 			}
 						
 			private function configTab():void{
-				var tab:TabContainer = getCurrentTab();
+				var tab:Tab = getCurrentTab().tab;
+				//creo un objeto tab con los mismos valores
+				//simulo pasar por valor el objeto tab, y no por referencia
+				var t:Tab = new Tab();
+				t.id = tab.id;
+				t.name = tab.name;
+				t.pods = tab.pods;
 				
 				var popUp:editTab = editTab(PopUpManager.createPopUp(btnConfig, editTab,true));
-				popUp.addEventListener("saveTab",onSaveTab);
+				popUp.tab = t;
+				popUp.onSaveTabFunction = onSaveTab;
 				popUp.addEventListener("deleteTab",onDeleteTab);
-				popUp.tab = tab.tab;
-				popUp.txtTabName.text = tab.label;
 				PopUpManager.centerPopUp(popUp);
 				popUp.x = popUp.x - popUp.width;
 			}
 			
-			private function onSaveTab(e:Event):void{
+			private function onSaveTab(t:Tab):void{
 				var tab:TabContainer = getCurrentTab();
 				
 				//para que no se cebe agregando tabs, lo limito al 70% de la pantalla
@@ -239,29 +243,16 @@
 				
 				if(!maxTabReached && tab.newTab)
 					agregarPestaniaNewTab();
+								
+				tab.tab = t;
 				
-				var edit:IFlexDisplayObject = e.target as IFlexDisplayObject;
-				tab.label = editTab(edit).txtTabName.text;
-				
-				//random string para salir del paso
-				var a:String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-				var alphabet:Array = a.split("");
-				var randomLetter:String = "";
-				for (var i:Number = 0; i < 10; i++){
-					randomLetter += alphabet[Math.floor(Math.random() * alphabet.length)];
-				}	
-				
-				//luego va a ser el id posta del objeto Tab
 				for each(var manager:PodLayoutManager in podLayoutManagers){
 					if(manager.id == tab.id){
-						manager.id = randomLetter;
+						manager.id = t.id.toString();
 					}
 				}
-				tab.id = randomLetter;
+				tab.id = t.id.toString();
 				tab.newTab = false;
-				
-				
-				PopUpManager.removePopUp(edit);
 			}
 			
 			private function onDeleteTab(e:Event):void{
@@ -290,21 +281,20 @@
 			
 			private function agregarPestaniaNewTab():void{
 				// ****** Creo la pestaña "New Tab" *************
-				var tab:TabContainer = new TabContainer();
+				var t:Tab = new Tab();
+				t.name = "New Tab";
+				var tab:TabContainer = new TabContainer(t);
 				tab.newTab = true;
-				tab.label = "New Tab";
 				tab.id = "newtabId";
-				tab.tab = new Tab();
 				tab.percentWidth = 100;
 				tab.percentHeight = 100;
 				viewStack.addChild(tab);
 				
 				var managr:PodLayoutManager = new PodLayoutManager();
 				managr.container = tab;
-				managr.id = "newTabId";
+				managr.id = tab.id;
 				managr.addEventListener(LayoutChangeEvent.UPDATE, StateManager.setPodLayout);
-				// Store the pod data. Used when view is first made visible.
-//				podDataDictionary[managr] = new XMLList();
+
 				podLayoutManagers.push(managr);
 			}
 			
