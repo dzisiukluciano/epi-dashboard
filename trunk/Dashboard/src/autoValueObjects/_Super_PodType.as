@@ -45,7 +45,7 @@ public class _Super_PodType extends flash.events.EventDispatcher implements com.
     /**
      * properties
      */
-    private var _internal_id : Number;
+    private var _internal_id : int;
     private var _internal_name : String;
 
     private static var emptyArray:Array = new Array();
@@ -71,7 +71,7 @@ public class _Super_PodType extends flash.events.EventDispatcher implements com.
      */
 
     [Bindable(event="propertyChange")]
-    public function get id() : Number
+    public function get id() : int
     {
         return _internal_id;
     }
@@ -86,9 +86,9 @@ public class _Super_PodType extends flash.events.EventDispatcher implements com.
      * data property setters
      */
 
-    public function set id(value:Number) : void
+    public function set id(value:int) : void
     {
-        var oldValue:Number = _internal_id;
+        var oldValue:int = _internal_id;
         if (oldValue !== value)
         {
             _internal_id = value;
