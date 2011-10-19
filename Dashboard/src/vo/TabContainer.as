@@ -3,12 +3,16 @@ package vo
 	
 	import autoValueObjects.Tab;
 	
+	import mx.binding.utils.BindingUtils;
+	
 	import spark.components.NavigatorContent;
 
 	public class TabContainer extends NavigatorContent
 	{
-		public function TabContainer()
+		public function TabContainer(tab:Tab)
 		{
+			this.tab = tab;
+			BindingUtils.bindProperty(this,"label",this.tab,"name");
 		}
 		
 		[Embed(source="/assets/plus.png")]

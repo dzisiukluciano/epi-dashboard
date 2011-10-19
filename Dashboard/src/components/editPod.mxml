@@ -7,19 +7,17 @@
 	<fx:Script>
 		<![CDATA[
 			import autoValueObjects.Pod;
+			import autoValueObjects.Tab;
 			
-			import mx.binding.utils.BindingUtils;
-			import mx.collections.ArrayCollection;
 			import mx.managers.PopUpManager;
-			
+
 			[Bindable]
-			public var pods:ArrayCollection;		
+			public var container:podButton;
 	
 			
-			public function editPodFunction(pod:Pod, container:podButton):void{			
+			public function editPodFunction():void{			
 				podDtd.visible = true;
-				podDtd.pod = pod;
-				podDtd.container = container;
+				podDtd.setPod(podCrud.selectedPod);
 			}
 			
 			
@@ -28,10 +26,11 @@
 	
 	<fx:Declarations>
 		<s:Fade id="showEffect" alphaFrom="0" alphaTo="1" duration="400"/>
-		<s:Fade id="hideEffect" alphaFrom="1" alphaTo="0" duration="100"/>
+		<s:Fade id="hideEffect" alphaFrom="1" alphaTo="0" duration="300"/>
 	</fx:Declarations>	
 	
-	<components:podDetail id="podDtd" visible="false" height="{podlst.height}" showEffect="showEffect"/>
+	<components:podDetail id="podDtd" visible="false" height="{podCrud.height}" podsCollection="{podCrud.pods}" showEffect="showEffect" hideEffect="hideEffect"/>
 	
-	<components:podList id="podlst" cancel="{PopUpManager.removePopUp(this)}" pods="{this.pods}" editPodFunction="{editPodFunction}"/>	
+	<components:podsCrud id="podCrud" container="{this.container}" close="{PopUpManager.removePopUp(this);}"
+						 editPod="editPodFunction()"/>
 </s:HGroup>

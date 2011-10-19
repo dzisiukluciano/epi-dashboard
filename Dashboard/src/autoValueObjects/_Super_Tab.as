@@ -49,10 +49,10 @@ public class _Super_Tab extends flash.events.EventDispatcher implements com.adob
     /**
      * properties
      */
-    private var _internal_id : Number;
+    private var _internal_id : int;
+    private var _internal_name : String;
     private var _internal_pods : ArrayCollection;
     model_internal var _internal_pods_leaf:autoValueObjects.Pod;
-    private var _internal_name : String;
 
     private static var emptyArray:Array = new Array();
 
@@ -77,15 +77,9 @@ public class _Super_Tab extends flash.events.EventDispatcher implements com.adob
      */
 
     [Bindable(event="propertyChange")]
-    public function get id() : Number
+    public function get id() : int
     {
         return _internal_id;
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get pods() : ArrayCollection
-    {
-        return _internal_pods;
     }
 
     [Bindable(event="propertyChange")]
@@ -94,17 +88,33 @@ public class _Super_Tab extends flash.events.EventDispatcher implements com.adob
         return _internal_name;
     }
 
+    [Bindable(event="propertyChange")]
+    public function get pods() : ArrayCollection
+    {
+        return _internal_pods;
+    }
+
     /**
      * data property setters
      */
 
-    public function set id(value:Number) : void
+    public function set id(value:int) : void
     {
-        var oldValue:Number = _internal_id;
+        var oldValue:int = _internal_id;
         if (oldValue !== value)
         {
             _internal_id = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "id", oldValue, _internal_id));
+        }
+    }
+
+    public function set name(value:String) : void
+    {
+        var oldValue:String = _internal_name;
+        if (oldValue !== value)
+        {
+            _internal_name = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "name", oldValue, _internal_name));
         }
     }
 
@@ -126,16 +136,6 @@ public class _Super_Tab extends flash.events.EventDispatcher implements com.adob
                 throw new Error("value of pods must be a collection");
             }
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "pods", oldValue, _internal_pods));
-        }
-    }
-
-    public function set name(value:String) : void
-    {
-        var oldValue:String = _internal_name;
-        if (oldValue !== value)
-        {
-            _internal_name = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "name", oldValue, _internal_name));
         }
     }
 

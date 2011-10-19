@@ -47,7 +47,7 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
     /**
      * properties
      */
-    private var _internal_id : Number;
+    private var _internal_id : int;
     private var _internal_dataSource : String;
     private var _internal_title : String;
     private var _internal_valueField : String;
@@ -77,7 +77,7 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
      */
 
     [Bindable(event="propertyChange")]
-    public function get id() : Number
+    public function get id() : int
     {
         return _internal_id;
     }
@@ -116,9 +116,9 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
      * data property setters
      */
 
-    public function set id(value:Number) : void
+    public function set id(value:int) : void
     {
-        var oldValue:Number = _internal_id;
+        var oldValue:int = _internal_id;
         if (oldValue !== value)
         {
             _internal_id = value;

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  title="Pods' administration"
+		  creationComplete="onComplete()" xmlns:autoServices="autoServices.*">
+	
+	<fx:Metadata>
+		[Event(name="close", type="flash.events.Event")]
+		[Event(name="editPod", type="flash.events.Event")]
+	</fx:Metadata>
+	
+	<fx:Script>
+		<![CDATA[
+			import autoValueObjects.Pod;
+			
+			import events.PodEvent;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			public var pods:ArrayCollection;
+			[Bindable]
+			public var container:podButton;
+			[Bindable]
+			public var selectedPod:Pod;
+			
+			public function onComplete():void{
+				findAllPodsResult.token = podService.findAllPods();
+			}
+			
+			public function findAllPodsResultHandler(pods:*):void{
+				this.pods = pods as ArrayCollection;
+			}
+			
+			public function select():void{
+				if(dgPods.selectedItem!=null){
+					this.container.pod = dgPods.selectedItem as Pod;
+					dispatchEvent(new Event("close"));
+				}
+			}
+			
+			public function newPod():void{
+				this.selectedPod = null;
+				dispatchEvent(new Event("editPod"));
+			}
+			
+			public function editPod():void{
+				this.selectedPod = dgPods.selectedItem as Pod;
+				dispatchEvent(new Event("editPod"));
+			}
+			
+			public function showPodType(item:Object,column:DataGridColumn):String
+			{
+				return Pod(item).type.name;
+			}			
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:CallResponder id="findAllPodsResult"/>
+		<autoServices:PodService id="podService" fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+								 result="findAllPodsResultHandler(event.result)" showBusyCursor="true"/>
+	</fx:Declarations>
+	<s:VGroup>
+
+		<mx:DataGrid id="dgPods" dataProvider="{pods}" doubleClickEnabled="true"
+					 doubleClick="select()">
+			<mx:columns>
+				<mx:DataGridColumn dataField="title" headerText="Title" width="150"/>
+				<mx:DataGridColumn dataField="dataSource" headerText="Data Source" width="150"/>
+				<mx:DataGridColumn dataField="valueField" headerText="Value Field" width="90"/>
+				<mx:DataGridColumn dataField="categoryField" headerText="Category Field" width="90"/>
+				<mx:DataGridColumn labelFunction="showPodType" headerText="Type" width="70"/>
+			</mx:columns>
+		</mx:DataGrid>
+	</s:VGroup>
+	
+	<s:controlBarLayout> 
+		<s:HorizontalLayout horizontalAlign="right" paddingTop="8" paddingRight="8"/> 
+	</s:controlBarLayout>
+	<s:controlBarContent>
+		<mx:Button label="New" icon="@Embed(source='../assets/plus.png')" click="newPod()"/>
+		<mx:Button label="Edit" icon="@Embed(source='../assets/edit.png')" click="editPod()" enabled="{dgPods.selectedItem != null}"/>
+		<mx:Button label="Select" icon="@Embed(source='../assets/ok.png')" click="select()" enabled="{dgPods.selectedItem != null}"/>
+		<mx:Button label="Cancel" icon="@Embed(source='../assets/cancel.png')" click="{dispatchEvent(new Event('close'));}"/>
+	</s:controlBarContent>
+</s:Panel>

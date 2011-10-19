@@ -19,22 +19,28 @@
 			import mx.binding.utils.BindingUtils;
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.rpc.Fault;
+			import mx.rpc.events.ResultEvent;
 			
 			[Bindable]
 			private var podTypes:ArrayCollection;
 			
 			[Bindable]
-			public var pod:Pod;
+			private var pod:Pod;
+			
 			[Bindable]
-			public var container:podButton;
+			public var podsCollection:ArrayCollection;
+
 			
 			private function init():void{
 				retrievePodTypesResult.token = podService.retrievePodTypes();
-				BindingUtils.bindSetter(setValues,this,"pod");
+//				BindingUtils.bindSetter(setValues,this,"pod");
 			}
 			
-			private function setValues(pod:Pod):void{
+			public function setPod(pod:Pod):void{
 				cleanAll();
+				this.pod = pod;
 				if(pod!=null){
 					this.txtTitle.text = pod.title;
 					this.txtDataSource.text = pod.dataSource;
@@ -48,7 +54,7 @@
 				}
 			}
 			
-			public function retrievePodTypesResultHandler(result:*):void{
+			public function retrievePodTypesResultHandler(result:*):void{				
 				podTypes = result as ArrayCollection;
 			}
 			
@@ -68,20 +74,31 @@
 				if(campos.length>0){
 					Alert.show("Complete the following fields:"+campos,"Required data");
 				}else{
-					var newPod:Pod = this.pod;
-					if(this.pod == null)
-						newPod = new Pod();
 					
-				
+					Alert.show("Are you sure you want to save this information?","Confirm",Alert.OK|Alert.CANCEL,null,confirmSave,null,Alert.OK);				
+				}
+			}
+			
+			private function confirmSave(eventObj:CloseEvent):void{
+				if(eventObj.detail==Alert.OK){
+					var creation:Boolean = false;
+					var newPod:Pod = this.pod;
+					if(this.pod == null){
+						newPod = new Pod();
+						creation = true;
+					}
+										
 					newPod.title = this.txtTitle.text;
 					newPod.dataSource = this.txtDataSource.text;
 					newPod.valueField = this.txtValueField.text;
 					newPod.categoryField = this.txtCategoryField.text;
 					newPod.type = this.cmbType.selectedItem;
-					this.visible = false;
 					
-					container.pod = newPod;
-					this.pod = newPod;
+					if(creation){
+						savePodResult.token = podService.saveOrUpdatePod(newPod);
+					}else{
+						updatePodResult.token = podService.saveOrUpdatePod(newPod);						
+					}
 				}
 			}
 			
@@ -97,16 +114,35 @@
 				this.txtCategoryField.text = "";
 				this.cmbType.selectedItem = null;
 			}
-			
+									
+			private function updatePodResultHandler(result:*):void{
+				this.visible = false;				
+				this.pod = result as Pod;
+			}
+			private function savePodResultHandler(result:*):void{
+				this.visible = false;				
+				this.podsCollection.addItem(result as Pod);
+			}
+			private function saveOrUpdatePodFaultHandler(e:Fault):void{
+				var index:int = e.faultString.indexOf("InvalidPodConfigurationException");
+				if (index != -1){
+					Alert.show("Invalid pod configuration","Error");
+				}else{
+					Alert.show(e.faultString + '\n' + e.faultDetail);
+				}
+			}
 			
 		]]>
 	</fx:Script>
 	
 	<fx:Declarations>
-		<s:CallResponder id="retrievePodTypesResult"/>
-		<autoServices:PodService id="podService" 
-								 fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
-								 result="retrievePodTypesResultHandler(event.result)" 
+		<s:CallResponder id="retrievePodTypesResult" result="retrievePodTypesResultHandler(event.result)"
+						 fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"/>		
+		<s:CallResponder id="updatePodResult" result="updatePodResultHandler(event.result)"
+						 fault="saveOrUpdatePodFaultHandler(event.fault)"/>
+		<s:CallResponder id="savePodResult" result="savePodResultHandler(event.result)"
+						 fault="saveOrUpdatePodFaultHandler(event.fault)"/>
+		<autoServices:PodService id="podService" 					 
 								 showBusyCursor="true"/>
 	</fx:Declarations>
 	
