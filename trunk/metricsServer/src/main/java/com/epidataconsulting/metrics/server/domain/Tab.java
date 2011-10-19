@@ -4,31 +4,23 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.epidataconsulting.metrics.common.domain.AbstractDomain;
+
 @Entity
 @Table(name = "tabs")
-public class Tab {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+public class Tab extends AbstractDomain{
 	
 	@Column(nullable = false)
 	private String name;
 	
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
 	@JoinTable(name="tab_pod",
 			joinColumns = {@JoinColumn(name="tab_id", unique = true)},
 			inverseJoinColumns = {@JoinColumn(name= "pod_id")}     
 	)
 	private List<Pod> pods;
 
-	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
+
 	public String getName() {
 		return name;
 	}

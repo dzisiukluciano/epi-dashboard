@@ -24,6 +24,13 @@ public class TabService {
 		List<Tab> tabs = tabDao.findAll();
 		return tabs;
 	}
+	
+	@Transactional
+	public Tab saveOrUpdateTab(Tab tab){
+		tabDao.update(tab);
+		return tab;
+	}
+	
 
 
 }
