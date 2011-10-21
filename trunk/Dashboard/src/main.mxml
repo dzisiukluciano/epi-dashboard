@@ -85,7 +85,6 @@
 				for each (var t:Tab in tabs){
 					
 					var tab:TabContainer = new TabContainer(t);
-					tab.label = t.name;
 					tab.percentWidth = 100;
 					tab.percentHeight = 100;
 					tab.id = t.id.toString();
@@ -248,11 +247,20 @@
 				
 				for each(var manager:PodLayoutManager in podLayoutManagers){
 					if(manager.id == tab.id){
+						manager.clear();
 						manager.id = t.id.toString();
+						manager.container = tab;
+						podDataDictionary[manager] = t.pods;
 					}
 				}
+				
 				tab.id = t.id.toString();
 				tab.newTab = false;
+				
+				var index:Number = StateManager.getViewIndex();
+				index = Math.min(viewStack.numChildren - 1, index);
+				onItemClickTabBar(new IndexChangeEvent(IndexChangeEvent.CHANGE, false, false, -1, index));
+				tabBar.selectedIndex = index;				
 			}
 			
 			private function onDeleteTab(e:Event):void{
