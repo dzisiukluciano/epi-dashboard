@@ -77,6 +77,16 @@ public class PodLayoutManager extends EventDispatcher
 		_container.addEventListener(ResizeEvent.RESIZE, updateLayout);
 	}
 	
+	/** Funcion para limpiar el manager 
+	 */
+	public function clear():void{
+		container.removeAllElements();
+		items = new Array();
+		dragHighlightItems = new Array();
+		gridPoints = new Array();
+		minimizedItems = new Array();
+	}
+	
 	// Sets the canvas which will hold the pods.
 	public function set container(canvas:NavigatorContent):void
 	{
