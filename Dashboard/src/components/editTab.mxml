@@ -62,9 +62,9 @@
 		]]>
 	</fx:Script>
 	<fx:Declarations>
-		<s:CallResponder id="saveTabResult"/>
-		<autoServices:TabService id="tabService" fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
-								 result="saveOrUpdateTabResultHandler(event.result)" showBusyCursor="true"/>
+		<s:CallResponder id="saveTabResult" fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+						 result="saveOrUpdateTabResultHandler(event.result)" />
+		<autoServices:TabService id="tabService" showBusyCursor="true"/>
 	</fx:Declarations>
 	
 	<mx:VBox width="100%" height="100%" horizontalAlign="right">

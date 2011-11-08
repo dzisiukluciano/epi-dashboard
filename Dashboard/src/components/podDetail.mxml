@@ -4,12 +4,13 @@
 		  xmlns:mx="library://ns.adobe.com/flex/mx"
 		  xmlns:autoServices="autoServices.*"
 		  creationComplete="init()" 
-		  paddingTop="10"
+		  paddingTop="7"
 		  paddingBottom="3"
 		  paddingRight="7"
 		  paddingLeft="5"
-		  gap="10"
-		  horizontalAlign="right">
+		  gap="6"
+		  horizontalAlign="right" 
+		  currentState="podState">
 
 	<fx:Script>
 		<![CDATA[
@@ -45,12 +46,21 @@
 					this.txtTitle.text = pod.title;
 					this.txtDataSource.text = pod.dataSource;
 					this.txtValueField.text = pod.valueField;
-					this.txtCategoryField.text = pod.categoryField;
 					this.cmbType.selectedItem = null;
 					for each (var podType:PodType in cmbType.dataProvider){
-						if(pod.type != null && podType.name == pod.type.name)
+						if(pod.type != null && podType.name == pod.type.name){
 							this.cmbType.selectedItem = podType;
+							break;
+						}
 					}
+					onChangeType();
+					if(currentState=="podState"){					
+						this.txtCategoryField.text = pod.categoryField;
+					}else{							
+						this.txtCode.text = pod.code;
+						this.txtScale.text = pod.joinTable;			
+					}
+					
 				}
 			}
 			
@@ -66,10 +76,18 @@
 					campos += "\nData Source";
 				if(txtValueField.text == null || txtValueField.text.length == 0)
 					campos += "\nValue Field";
-				if(txtCategoryField.text == null || txtCategoryField.text.length == 0)
-					campos += "\nCategory Field";
 				if(cmbType.selectedItem == null)
 					campos += "\nPod Type";
+				
+				if(currentState=="podState"){
+					if(txtCategoryField.text == null || txtCategoryField.text.length == 0)
+						campos += "\nCategory Field";
+				}else{
+					if(txtScale.text == null || txtScale.text.length == 0)
+						campos += "\nScale source";
+					if(txtCode.text == null || txtCode.text.length == 0)
+						campos += "\nIndicator code";
+				}
 				
 				if(campos.length>0){
 					Alert.show("Complete the following fields:"+campos,"Required data");
@@ -81,6 +99,7 @@
 			
 			private function confirmSave(eventObj:CloseEvent):void{
 				if(eventObj.detail==Alert.OK){
+					
 					var creation:Boolean = false;
 					var newPod:Pod = this.pod;
 					if(this.pod == null){
@@ -91,14 +110,20 @@
 					newPod.title = this.txtTitle.text;
 					newPod.dataSource = this.txtDataSource.text;
 					newPod.valueField = this.txtValueField.text;
-					newPod.categoryField = this.txtCategoryField.text;
 					newPod.type = this.cmbType.selectedItem;
+					if(currentState=="podState"){					
+						newPod.categoryField = this.txtCategoryField.text;
+					}else{							
+						newPod.joinTable = this.txtScale.text;
+						newPod.code = this.txtCode.text;		
+					}		
 					
 					if(creation){
 						savePodResult.token = podService.saveOrUpdatePod(newPod);
 					}else{
 						updatePodResult.token = podService.saveOrUpdatePod(newPod);						
 					}
+					
 				}
 			}
 			
@@ -111,8 +136,13 @@
 				this.txtTitle.text = "";
 				this.txtDataSource.text = "";
 				this.txtValueField.text = "";
-				this.txtCategoryField.text = "";
 				this.cmbType.selectedItem = null;
+				if(currentState=="podState"){					
+					this.txtCategoryField.text = "";
+				}else{	
+					this.txtCode.text = "";
+					this.txtScale.text = "";				
+				}
 			}
 									
 			private function updatePodResultHandler(result:*):void{
@@ -132,8 +162,19 @@
 				}
 			}
 			
+			private function onChangeType():void{
+				if(PodType(cmbType.selectedItem).name == "Gauge")
+					this.currentState = "indicatorState";
+				else
+					this.currentState = "podState";
+			}
+			
 		]]>
 	</fx:Script>
+	<s:states>
+		<s:State name="podState"/>
+		<s:State name="indicatorState"/>
+	</s:states>
 	
 	<fx:Declarations>
 		<s:CallResponder id="retrievePodTypesResult" result="retrievePodTypesResultHandler(event.result)"
@@ -152,21 +193,29 @@
 	</mx:FormItem>
 	<mx:FormItem label="Pod type:" fontWeight="bold" required="true">			
 		<s:DropDownList id="cmbType" dataProvider="{podTypes}" labelField="name" 
-						width="150" prompt="Select"/>
+						width="150" prompt="Select" change="onChangeType()"/>
 	</mx:FormItem>
+	
 	<mx:FormItem label="Data source:" fontWeight="bold" required="true">			
 		<mx:TextInput id="txtDataSource" width="150"/>
 	</mx:FormItem>
 	<mx:FormItem label="Value field:" fontWeight="bold" required="true">			
 		<mx:TextInput id="txtValueField" width="150"/>
 	</mx:FormItem>
-	<mx:FormItem label="Category field:" fontWeight="bold" required="true">			
+	<mx:FormItem label="Category field:" fontWeight="bold" required="true" includeIn="podState">			
 		<mx:TextInput id="txtCategoryField" width="150"/>
 	</mx:FormItem>
+	<mx:FormItem label="Indicator code :" fontWeight="bold" required="true" includeIn="indicatorState">			
+		<mx:TextInput id="txtCode" width="150" maxChars="32"/>
+	</mx:FormItem>
+	<mx:FormItem label="Scale source :" fontWeight="bold" required="true" includeIn="indicatorState">			
+		<mx:TextInput id="txtScale" width="150"/>
+	</mx:FormItem>
+	
 	
 	<mx:Spacer height="100%"/>
 	
-	<mx:HBox width="100%" horizontalAlign="right" paddingTop="15">
+	<mx:HBox width="100%" horizontalAlign="right" paddingTop="10">
 		<mx:Button label="Save" icon="@Embed(source='../assets/save.png')" click="save()"/>
 		<mx:Button label="Cancel" icon="@Embed(source='../assets/cancel.png')" click="cancel()"/>
 	</mx:HBox>

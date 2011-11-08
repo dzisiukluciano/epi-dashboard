@@ -18,6 +18,7 @@
 			import events.PodEvent;
 			
 			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
 			import mx.core.FlexGlobals;
 			import mx.managers.PopUpManager;
 
@@ -48,14 +49,26 @@
 			
 			public function accept():void{
 				var pods:ArrayCollection = new ArrayCollection();
+				var ids:ArrayCollection = new ArrayCollection();
+				var repeated:Boolean = false;
 				for(var i:int = 0; i<8; i++){
 					var podComponent:podButton = container.getElementAt(i) as podButton;
-					if(podComponent.pod != null)
-						pods.addItem(podComponent.pod);
+					if(podComponent.pod != null){
+						if(ids.contains(podComponent.pod.id)){
+							Alert.show("Pods can not be added repeated");
+							repeated = true;
+							break;
+						}else{
+							ids.addItem(podComponent.pod.id);
+							pods.addItem(podComponent.pod);
+						}
+					}
 				}
-				this.tab.pods = pods;
-				dispatchEvent(new Event('accept'));
-				PopUpManager.removePopUp(this);
+				if(!repeated){
+					this.tab.pods = pods;
+					dispatchEvent(new Event('accept'));
+					PopUpManager.removePopUp(this);
+				}
 			}
 			
 		]]>
