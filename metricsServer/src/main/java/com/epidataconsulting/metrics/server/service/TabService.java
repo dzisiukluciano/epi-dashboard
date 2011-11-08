@@ -31,6 +31,10 @@ public class TabService {
 		return tab;
 	}
 	
+	@Transactional
+	public void deleteTab(Tab tab){
+		tabDao.delete(tab);
+	}
 
 
 }

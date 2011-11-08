@@ -3,8 +3,8 @@ package com.epidataconsulting.metrics.server.service;
 
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.flex.remoting.RemotingDestination;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,10 @@ public class ObjectService {
 	private IndicatorDAO indicadorDao;
 	
 	private ArrayCollection treecol;
+	
+	@SuppressWarnings("unused")
 	private ArrayList<Indicator> indicadores;
+	
 	@Transactional
 	public List<Package> getAllPackage(){
 		
@@ -52,6 +55,8 @@ public class ObjectService {
 			}	
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
 	@Transactional
 	private Package getNodoRaiz(){
 		Package pack = (Package) packDao.findAllByParent(0).get(0);
@@ -85,7 +90,7 @@ public class ObjectService {
 			Package padre = getPack(treecol,metrica.getPackID() );
 			if(padre!=null){
 				Package hijo = new Package();
-				hijo.setName(indicador.getName());
+				hijo.setName(indicador.getNombre());
 				hijo.setIndicadorid(indicador.getCode());
 				if(!padre.contiene(hijo)){
 					insertarHijo( padre ,hijo);

@@ -1,6 +1,11 @@
 package com.epidataconsulting.metrics.server.domain;
 
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
 
 import com.epidataconsulting.metrics.common.domain.AbstractDomain;
 
@@ -9,15 +14,19 @@ import com.epidataconsulting.metrics.common.domain.AbstractDomain;
 public class PodType extends AbstractDomain{
 	
 	@Column(nullable = false)
-	private String name;
+	@Enumerated(EnumType.STRING)
+	private PodTypeName name;
 
-	public String getName() {
+	public void setName(PodTypeName name) {
+		this.name = name;
+	}
+
+	public PodTypeName getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
+
+
 	
 	
 	
