@@ -42,7 +42,7 @@
 				initialDataProvider = result as ArrayCollection;
 				dataProvider = result as ArrayCollection;
 				
-				pieChart.addEventListener(ChartItemEvent.ITEM_CLICK, drillDown);
+			//	pieChart.addEventListener(ChartItemEvent.ITEM_CLICK, drillDown);
 			}
 			
 			private function pieChartDataTipFunction(o:HitData):String

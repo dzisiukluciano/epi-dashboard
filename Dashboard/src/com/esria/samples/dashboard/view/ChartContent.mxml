@@ -59,8 +59,8 @@
 //				else
 					selectedViewIndex = 0;
 				
-				columnChart.addEventListener(ChartItemEvent.ITEM_CLICK, drillDown);
-				lineChart.addEventListener(ChartItemEvent.ITEM_CLICK, drillDown);
+//				columnChart.addEventListener(ChartItemEvent.ITEM_CLICK, drillDown);
+///				lineChart.addEventListener(ChartItemEvent.ITEM_CLICK, drillDown);
 			}
 			
 			private function set selectedViewIndex(n:Number):void
