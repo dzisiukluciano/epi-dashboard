@@ -1,11 +1,10 @@
 /**
  * This is a generated class and is not intended for modification.  To customize behavior
- * of this value object you may modify the generated sub-class of this class - Pod.as.
+ * of this value object you may modify the generated sub-class of this class - IndicatorScale.as.
  */
 
 package autoValueObjects
 {
-import autoValueObjects.PodType;
 import com.adobe.fiber.services.IFiberManagingService;
 import com.adobe.fiber.valueobjects.IValueObject;
 import flash.events.EventDispatcher;
@@ -20,44 +19,47 @@ import com.adobe.fiber.valueobjects.AvailablePropertyIterator;
 use namespace model_internal;
 
 [ExcludeClass]
-public class _Super_Pod extends flash.events.EventDispatcher implements com.adobe.fiber.valueobjects.IValueObject
+public class _Super_IndicatorScale extends flash.events.EventDispatcher implements com.adobe.fiber.valueobjects.IValueObject
 {
     model_internal static function initRemoteClassAliasSingle(cz:Class) : void
     {
         try
         {
-            if (flash.net.getClassByAlias("com.epidataconsulting.metrics.server.domain.Pod") == null)
+            if (flash.net.getClassByAlias("com.epidataconsulting.metrics.common.domain.IndicatorScale") == null)
             {
-                flash.net.registerClassAlias("com.epidataconsulting.metrics.server.domain.Pod", cz);
+                flash.net.registerClassAlias("com.epidataconsulting.metrics.common.domain.IndicatorScale", cz);
             }
         }
         catch (e:Error)
         {
-            flash.net.registerClassAlias("com.epidataconsulting.metrics.server.domain.Pod", cz);
+            flash.net.registerClassAlias("com.epidataconsulting.metrics.common.domain.IndicatorScale", cz);
         }
     }
 
     model_internal static function initRemoteClassAliasAllRelated() : void
     {
-        autoValueObjects.PodType.initRemoteClassAliasSingleChild();
     }
 
-    model_internal var _dminternal_model : _PodEntityMetadata;
+    model_internal var _dminternal_model : _IndicatorScaleEntityMetadata;
 
     /**
      * properties
      */
     private var _internal_id : int;
-    private var _internal_dataSource : String;
-    private var _internal_title : String;
-    private var _internal_valueField : String;
+    private var _internal_reverse : Boolean;
+    private var _internal_posicionregBuena : Number;
+    private var _internal_regular : Number;
+    private var _internal_posicionminReg : Number;
+    private var _internal_bueno : Number;
     private var _internal_code : String;
-    private var _internal_type : autoValueObjects.PodType;
-    private var _internal_categoryField : String;
-    private var _internal_joinTable : String;
+    private var _internal_maximo : Number;
+    private var _internal_posicionbuenaMax : Number;
+    private var _internal_minimo : Number;
 
     private static var emptyArray:Array = new Array();
 
+    // Change this value according to your application's floating-point precision
+    private static var epsilon:Number = 0.0001;
 
     /**
      * derived property cache initialization
@@ -66,9 +68,9 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
 
     model_internal var _changeWatcherArray:Array = new Array();
 
-    public function _Super_Pod()
+    public function _Super_IndicatorScale()
     {
-        _model = new _PodEntityMetadata(this);
+        _model = new _IndicatorScaleEntityMetadata(this);
 
         // Bind to own data properties for cache invalidation triggering
 
@@ -85,21 +87,33 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
     }
 
     [Bindable(event="propertyChange")]
-    public function get dataSource() : String
+    public function get reverse() : Boolean
     {
-        return _internal_dataSource;
+        return _internal_reverse;
     }
 
     [Bindable(event="propertyChange")]
-    public function get title() : String
+    public function get posicionregBuena() : Number
     {
-        return _internal_title;
+        return _internal_posicionregBuena;
     }
 
     [Bindable(event="propertyChange")]
-    public function get valueField() : String
+    public function get regular() : Number
     {
-        return _internal_valueField;
+        return _internal_regular;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get posicionminReg() : Number
+    {
+        return _internal_posicionminReg;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get bueno() : Number
+    {
+        return _internal_bueno;
     }
 
     [Bindable(event="propertyChange")]
@@ -109,21 +123,21 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
     }
 
     [Bindable(event="propertyChange")]
-    public function get type() : autoValueObjects.PodType
+    public function get maximo() : Number
     {
-        return _internal_type;
+        return _internal_maximo;
     }
 
     [Bindable(event="propertyChange")]
-    public function get categoryField() : String
+    public function get posicionbuenaMax() : Number
     {
-        return _internal_categoryField;
+        return _internal_posicionbuenaMax;
     }
 
     [Bindable(event="propertyChange")]
-    public function get joinTable() : String
+    public function get minimo() : Number
     {
-        return _internal_joinTable;
+        return _internal_minimo;
     }
 
     /**
@@ -140,33 +154,53 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
         }
     }
 
-    public function set dataSource(value:String) : void
+    public function set reverse(value:Boolean) : void
     {
-        var oldValue:String = _internal_dataSource;
+        var oldValue:Boolean = _internal_reverse;
         if (oldValue !== value)
         {
-            _internal_dataSource = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "dataSource", oldValue, _internal_dataSource));
+            _internal_reverse = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "reverse", oldValue, _internal_reverse));
         }
     }
 
-    public function set title(value:String) : void
+    public function set posicionregBuena(value:Number) : void
     {
-        var oldValue:String = _internal_title;
-        if (oldValue !== value)
+        var oldValue:Number = _internal_posicionregBuena;
+        if (isNaN(_internal_posicionregBuena) == true || Math.abs(oldValue - value) > epsilon)
         {
-            _internal_title = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "title", oldValue, _internal_title));
+            _internal_posicionregBuena = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "posicionregBuena", oldValue, _internal_posicionregBuena));
         }
     }
 
-    public function set valueField(value:String) : void
+    public function set regular(value:Number) : void
     {
-        var oldValue:String = _internal_valueField;
-        if (oldValue !== value)
+        var oldValue:Number = _internal_regular;
+        if (isNaN(_internal_regular) == true || Math.abs(oldValue - value) > epsilon)
         {
-            _internal_valueField = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "valueField", oldValue, _internal_valueField));
+            _internal_regular = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "regular", oldValue, _internal_regular));
+        }
+    }
+
+    public function set posicionminReg(value:Number) : void
+    {
+        var oldValue:Number = _internal_posicionminReg;
+        if (isNaN(_internal_posicionminReg) == true || Math.abs(oldValue - value) > epsilon)
+        {
+            _internal_posicionminReg = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "posicionminReg", oldValue, _internal_posicionminReg));
+        }
+    }
+
+    public function set bueno(value:Number) : void
+    {
+        var oldValue:Number = _internal_bueno;
+        if (isNaN(_internal_bueno) == true || Math.abs(oldValue - value) > epsilon)
+        {
+            _internal_bueno = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "bueno", oldValue, _internal_bueno));
         }
     }
 
@@ -180,33 +214,33 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
         }
     }
 
-    public function set type(value:autoValueObjects.PodType) : void
+    public function set maximo(value:Number) : void
     {
-        var oldValue:autoValueObjects.PodType = _internal_type;
-        if (oldValue !== value)
+        var oldValue:Number = _internal_maximo;
+        if (isNaN(_internal_maximo) == true || Math.abs(oldValue - value) > epsilon)
         {
-            _internal_type = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "type", oldValue, _internal_type));
+            _internal_maximo = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "maximo", oldValue, _internal_maximo));
         }
     }
 
-    public function set categoryField(value:String) : void
+    public function set posicionbuenaMax(value:Number) : void
     {
-        var oldValue:String = _internal_categoryField;
-        if (oldValue !== value)
+        var oldValue:Number = _internal_posicionbuenaMax;
+        if (isNaN(_internal_posicionbuenaMax) == true || Math.abs(oldValue - value) > epsilon)
         {
-            _internal_categoryField = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "categoryField", oldValue, _internal_categoryField));
+            _internal_posicionbuenaMax = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "posicionbuenaMax", oldValue, _internal_posicionbuenaMax));
         }
     }
 
-    public function set joinTable(value:String) : void
+    public function set minimo(value:Number) : void
     {
-        var oldValue:String = _internal_joinTable;
-        if (oldValue !== value)
+        var oldValue:Number = _internal_minimo;
+        if (isNaN(_internal_minimo) == true || Math.abs(oldValue - value) > epsilon)
         {
-            _internal_joinTable = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "joinTable", oldValue, _internal_joinTable));
+            _internal_minimo = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "minimo", oldValue, _internal_minimo));
         }
     }
 
@@ -270,14 +304,14 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
 
     [Transient]
     [Bindable(event="propertyChange")]
-    public function get _model() : _PodEntityMetadata
+    public function get _model() : _IndicatorScaleEntityMetadata
     {
         return model_internal::_dminternal_model;
     }
 
-    public function set _model(value : _PodEntityMetadata) : void
+    public function set _model(value : _IndicatorScaleEntityMetadata) : void
     {
-        var oldValue : _PodEntityMetadata = model_internal::_dminternal_model;
+        var oldValue : _IndicatorScaleEntityMetadata = model_internal::_dminternal_model;
         if (oldValue !== value)
         {
             model_internal::_dminternal_model = value;

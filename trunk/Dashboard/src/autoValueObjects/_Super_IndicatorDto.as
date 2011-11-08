@@ -1,11 +1,11 @@
 /**
  * This is a generated class and is not intended for modification.  To customize behavior
- * of this value object you may modify the generated sub-class of this class - Pod.as.
+ * of this value object you may modify the generated sub-class of this class - IndicatorDto.as.
  */
 
 package autoValueObjects
 {
-import autoValueObjects.PodType;
+import autoValueObjects.IndicatorScale;
 import com.adobe.fiber.services.IFiberManagingService;
 import com.adobe.fiber.valueobjects.IValueObject;
 import flash.events.EventDispatcher;
@@ -20,44 +20,42 @@ import com.adobe.fiber.valueobjects.AvailablePropertyIterator;
 use namespace model_internal;
 
 [ExcludeClass]
-public class _Super_Pod extends flash.events.EventDispatcher implements com.adobe.fiber.valueobjects.IValueObject
+public class _Super_IndicatorDto extends flash.events.EventDispatcher implements com.adobe.fiber.valueobjects.IValueObject
 {
     model_internal static function initRemoteClassAliasSingle(cz:Class) : void
     {
         try
         {
-            if (flash.net.getClassByAlias("com.epidataconsulting.metrics.server.domain.Pod") == null)
+            if (flash.net.getClassByAlias("com.epidataconsulting.metrics.common.domain.IndicatorDto") == null)
             {
-                flash.net.registerClassAlias("com.epidataconsulting.metrics.server.domain.Pod", cz);
+                flash.net.registerClassAlias("com.epidataconsulting.metrics.common.domain.IndicatorDto", cz);
             }
         }
         catch (e:Error)
         {
-            flash.net.registerClassAlias("com.epidataconsulting.metrics.server.domain.Pod", cz);
+            flash.net.registerClassAlias("com.epidataconsulting.metrics.common.domain.IndicatorDto", cz);
         }
     }
 
     model_internal static function initRemoteClassAliasAllRelated() : void
     {
-        autoValueObjects.PodType.initRemoteClassAliasSingleChild();
+        autoValueObjects.IndicatorScale.initRemoteClassAliasSingleChild();
     }
 
-    model_internal var _dminternal_model : _PodEntityMetadata;
+    model_internal var _dminternal_model : _IndicatorDtoEntityMetadata;
 
     /**
      * properties
      */
     private var _internal_id : int;
-    private var _internal_dataSource : String;
-    private var _internal_title : String;
-    private var _internal_valueField : String;
+    private var _internal_valor : Number;
     private var _internal_code : String;
-    private var _internal_type : autoValueObjects.PodType;
-    private var _internal_categoryField : String;
-    private var _internal_joinTable : String;
+    private var _internal_indicatorscale : autoValueObjects.IndicatorScale;
 
     private static var emptyArray:Array = new Array();
 
+    // Change this value according to your application's floating-point precision
+    private static var epsilon:Number = 0.0001;
 
     /**
      * derived property cache initialization
@@ -66,9 +64,9 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
 
     model_internal var _changeWatcherArray:Array = new Array();
 
-    public function _Super_Pod()
+    public function _Super_IndicatorDto()
     {
-        _model = new _PodEntityMetadata(this);
+        _model = new _IndicatorDtoEntityMetadata(this);
 
         // Bind to own data properties for cache invalidation triggering
 
@@ -85,21 +83,9 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
     }
 
     [Bindable(event="propertyChange")]
-    public function get dataSource() : String
+    public function get valor() : Number
     {
-        return _internal_dataSource;
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get title() : String
-    {
-        return _internal_title;
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get valueField() : String
-    {
-        return _internal_valueField;
+        return _internal_valor;
     }
 
     [Bindable(event="propertyChange")]
@@ -109,21 +95,9 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
     }
 
     [Bindable(event="propertyChange")]
-    public function get type() : autoValueObjects.PodType
+    public function get indicatorscale() : autoValueObjects.IndicatorScale
     {
-        return _internal_type;
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get categoryField() : String
-    {
-        return _internal_categoryField;
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get joinTable() : String
-    {
-        return _internal_joinTable;
+        return _internal_indicatorscale;
     }
 
     /**
@@ -140,33 +114,13 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
         }
     }
 
-    public function set dataSource(value:String) : void
+    public function set valor(value:Number) : void
     {
-        var oldValue:String = _internal_dataSource;
-        if (oldValue !== value)
+        var oldValue:Number = _internal_valor;
+        if (isNaN(_internal_valor) == true || Math.abs(oldValue - value) > epsilon)
         {
-            _internal_dataSource = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "dataSource", oldValue, _internal_dataSource));
-        }
-    }
-
-    public function set title(value:String) : void
-    {
-        var oldValue:String = _internal_title;
-        if (oldValue !== value)
-        {
-            _internal_title = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "title", oldValue, _internal_title));
-        }
-    }
-
-    public function set valueField(value:String) : void
-    {
-        var oldValue:String = _internal_valueField;
-        if (oldValue !== value)
-        {
-            _internal_valueField = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "valueField", oldValue, _internal_valueField));
+            _internal_valor = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "valor", oldValue, _internal_valor));
         }
     }
 
@@ -180,33 +134,13 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
         }
     }
 
-    public function set type(value:autoValueObjects.PodType) : void
+    public function set indicatorscale(value:autoValueObjects.IndicatorScale) : void
     {
-        var oldValue:autoValueObjects.PodType = _internal_type;
+        var oldValue:autoValueObjects.IndicatorScale = _internal_indicatorscale;
         if (oldValue !== value)
         {
-            _internal_type = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "type", oldValue, _internal_type));
-        }
-    }
-
-    public function set categoryField(value:String) : void
-    {
-        var oldValue:String = _internal_categoryField;
-        if (oldValue !== value)
-        {
-            _internal_categoryField = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "categoryField", oldValue, _internal_categoryField));
-        }
-    }
-
-    public function set joinTable(value:String) : void
-    {
-        var oldValue:String = _internal_joinTable;
-        if (oldValue !== value)
-        {
-            _internal_joinTable = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "joinTable", oldValue, _internal_joinTable));
+            _internal_indicatorscale = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "indicatorscale", oldValue, _internal_indicatorscale));
         }
     }
 
@@ -270,14 +204,14 @@ public class _Super_Pod extends flash.events.EventDispatcher implements com.adob
 
     [Transient]
     [Bindable(event="propertyChange")]
-    public function get _model() : _PodEntityMetadata
+    public function get _model() : _IndicatorDtoEntityMetadata
     {
         return model_internal::_dminternal_model;
     }
 
-    public function set _model(value : _PodEntityMetadata) : void
+    public function set _model(value : _IndicatorDtoEntityMetadata) : void
     {
-        var oldValue : _PodEntityMetadata = model_internal::_dminternal_model;
+        var oldValue : _IndicatorDtoEntityMetadata = model_internal::_dminternal_model;
         if (oldValue !== value)
         {
             model_internal::_dminternal_model = value;

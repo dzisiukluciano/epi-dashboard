@@ -16,28 +16,28 @@ import mx.events.PropertyChangeEvent;
 use namespace model_internal;
 
 [ExcludeClass]
-internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractEntityMetadata
+internal class _IndicatorDtoEntityMetadata extends com.adobe.fiber.valueobjects.AbstractEntityMetadata
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("id", "dataSource", "title", "valueField", "code", "type", "categoryField", "joinTable");
+    model_internal static var allProperties:Array = new Array("id", "valor", "code", "indicatorscale");
     model_internal static var allAssociationProperties:Array = new Array();
     model_internal static var allRequiredProperties:Array = new Array();
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("id", "dataSource", "title", "valueField", "code", "type", "categoryField", "joinTable");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("id", "valor", "code", "indicatorscale");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("id", "dataSource", "title", "valueField", "code", "type", "categoryField", "joinTable");
+    model_internal static var dataProperties:Array = new Array("id", "valor", "code", "indicatorscale");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
-    model_internal static var entityName:String = "Pod";
+    model_internal static var entityName:String = "IndicatorDto";
     model_internal static var dependentsOnMap:Object;
     model_internal static var dependedOnServices:Array = new Array();
 
 
-    model_internal var _instance:_Super_Pod;
+    model_internal var _instance:_Super_IndicatorDto;
     model_internal static var _nullStyle:com.adobe.fiber.styles.Style = new com.adobe.fiber.styles.Style();
 
-    public function _PodEntityMetadata(value : _Super_Pod)
+    public function _IndicatorDtoEntityMetadata(value : _Super_IndicatorDto)
     {
         // initialize property maps
         if (model_internal::dependentsOnMap == null)
@@ -45,13 +45,9 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
             // depenents map
             model_internal::dependentsOnMap = new Object();
             model_internal::dependentsOnMap["id"] = new Array();
-            model_internal::dependentsOnMap["dataSource"] = new Array();
-            model_internal::dependentsOnMap["title"] = new Array();
-            model_internal::dependentsOnMap["valueField"] = new Array();
+            model_internal::dependentsOnMap["valor"] = new Array();
             model_internal::dependentsOnMap["code"] = new Array();
-            model_internal::dependentsOnMap["type"] = new Array();
-            model_internal::dependentsOnMap["categoryField"] = new Array();
-            model_internal::dependentsOnMap["joinTable"] = new Array();
+            model_internal::dependentsOnMap["indicatorscale"] = new Array();
 
             // collection base map
             model_internal::collectionBaseMap = new Object()
@@ -98,7 +94,7 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     override public function getDependants(propertyName:String):Array
     {
        if (model_internal::dataProperties.indexOf(propertyName) == -1)
-            throw new Error(propertyName + " is not a data property of entity Pod");  
+            throw new Error(propertyName + " is not a data property of entity IndicatorDto");  
             
        return model_internal::dependentsOnMap[propertyName] as Array;  
     }
@@ -116,7 +112,7 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     override public function getCollectionBase(propertyName:String):String
     {
         if (model_internal::collectionProperties.indexOf(propertyName) == -1)
-            throw new Error(propertyName + " is not a collection property of entity Pod");  
+            throw new Error(propertyName + " is not a collection property of entity IndicatorDto");  
 
         return model_internal::collectionBaseMap[propertyName];
     }
@@ -130,7 +126,7 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     {
         if (model_internal::allProperties.indexOf(propertyName) == -1)
         {
-            throw new Error(propertyName + " does not exist for entity Pod");
+            throw new Error(propertyName + " does not exist for entity IndicatorDto");
         }
 
         return model_internal::_instance[propertyName];
@@ -140,7 +136,7 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     {
         if (model_internal::dataProperties.indexOf(propertyName) == -1)
         {
-            throw new Error(propertyName + " is not a data property of entity Pod");
+            throw new Error(propertyName + " is not a data property of entity IndicatorDto");
         }
 
         model_internal::_instance[propertyName] = value;
@@ -172,7 +168,7 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     {
         if (model_internal::allProperties.indexOf(propertyName) == -1)
         {
-            throw new Error(propertyName + " does not exist for entity Pod");
+            throw new Error(propertyName + " does not exist for entity IndicatorDto");
         }
 
         if (model_internal::allAlwaysAvailableProperties.indexOf(propertyName) != -1)
@@ -273,19 +269,7 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     }
 
     [Bindable(event="propertyChange")]
-    public function get isDataSourceAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get isTitleAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get isValueFieldAvailable():Boolean
+    public function get isValorAvailable():Boolean
     {
         return true;
     }
@@ -297,19 +281,7 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTypeAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get isCategoryFieldAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get isJoinTableAvailable():Boolean
+    public function get isIndicatorscaleAvailable():Boolean
     {
         return true;
     }
@@ -331,19 +303,7 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     }
 
     [Bindable(event="propertyChange")]   
-    public function get dataSourceStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
-    public function get titleStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
-    public function get valueFieldStyle():com.adobe.fiber.styles.Style
+    public function get valorStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -355,19 +315,7 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     }
 
     [Bindable(event="propertyChange")]   
-    public function get typeStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
-    public function get categoryFieldStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
-    public function get joinTableStyle():com.adobe.fiber.styles.Style
+    public function get indicatorscaleStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }

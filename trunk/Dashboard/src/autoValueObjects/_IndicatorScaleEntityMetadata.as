@@ -16,28 +16,28 @@ import mx.events.PropertyChangeEvent;
 use namespace model_internal;
 
 [ExcludeClass]
-internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractEntityMetadata
+internal class _IndicatorScaleEntityMetadata extends com.adobe.fiber.valueobjects.AbstractEntityMetadata
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("id", "dataSource", "title", "valueField", "code", "type", "categoryField", "joinTable");
+    model_internal static var allProperties:Array = new Array("id", "reverse", "posicionregBuena", "regular", "posicionminReg", "bueno", "code", "maximo", "posicionbuenaMax", "minimo");
     model_internal static var allAssociationProperties:Array = new Array();
     model_internal static var allRequiredProperties:Array = new Array();
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("id", "dataSource", "title", "valueField", "code", "type", "categoryField", "joinTable");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("id", "reverse", "posicionregBuena", "regular", "posicionminReg", "bueno", "code", "maximo", "posicionbuenaMax", "minimo");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("id", "dataSource", "title", "valueField", "code", "type", "categoryField", "joinTable");
+    model_internal static var dataProperties:Array = new Array("id", "reverse", "posicionregBuena", "regular", "posicionminReg", "bueno", "code", "maximo", "posicionbuenaMax", "minimo");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
-    model_internal static var entityName:String = "Pod";
+    model_internal static var entityName:String = "IndicatorScale";
     model_internal static var dependentsOnMap:Object;
     model_internal static var dependedOnServices:Array = new Array();
 
 
-    model_internal var _instance:_Super_Pod;
+    model_internal var _instance:_Super_IndicatorScale;
     model_internal static var _nullStyle:com.adobe.fiber.styles.Style = new com.adobe.fiber.styles.Style();
 
-    public function _PodEntityMetadata(value : _Super_Pod)
+    public function _IndicatorScaleEntityMetadata(value : _Super_IndicatorScale)
     {
         // initialize property maps
         if (model_internal::dependentsOnMap == null)
@@ -45,13 +45,15 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
             // depenents map
             model_internal::dependentsOnMap = new Object();
             model_internal::dependentsOnMap["id"] = new Array();
-            model_internal::dependentsOnMap["dataSource"] = new Array();
-            model_internal::dependentsOnMap["title"] = new Array();
-            model_internal::dependentsOnMap["valueField"] = new Array();
+            model_internal::dependentsOnMap["reverse"] = new Array();
+            model_internal::dependentsOnMap["posicionregBuena"] = new Array();
+            model_internal::dependentsOnMap["regular"] = new Array();
+            model_internal::dependentsOnMap["posicionminReg"] = new Array();
+            model_internal::dependentsOnMap["bueno"] = new Array();
             model_internal::dependentsOnMap["code"] = new Array();
-            model_internal::dependentsOnMap["type"] = new Array();
-            model_internal::dependentsOnMap["categoryField"] = new Array();
-            model_internal::dependentsOnMap["joinTable"] = new Array();
+            model_internal::dependentsOnMap["maximo"] = new Array();
+            model_internal::dependentsOnMap["posicionbuenaMax"] = new Array();
+            model_internal::dependentsOnMap["minimo"] = new Array();
 
             // collection base map
             model_internal::collectionBaseMap = new Object()
@@ -98,7 +100,7 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     override public function getDependants(propertyName:String):Array
     {
        if (model_internal::dataProperties.indexOf(propertyName) == -1)
-            throw new Error(propertyName + " is not a data property of entity Pod");  
+            throw new Error(propertyName + " is not a data property of entity IndicatorScale");  
             
        return model_internal::dependentsOnMap[propertyName] as Array;  
     }
@@ -116,7 +118,7 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     override public function getCollectionBase(propertyName:String):String
     {
         if (model_internal::collectionProperties.indexOf(propertyName) == -1)
-            throw new Error(propertyName + " is not a collection property of entity Pod");  
+            throw new Error(propertyName + " is not a collection property of entity IndicatorScale");  
 
         return model_internal::collectionBaseMap[propertyName];
     }
@@ -130,7 +132,7 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     {
         if (model_internal::allProperties.indexOf(propertyName) == -1)
         {
-            throw new Error(propertyName + " does not exist for entity Pod");
+            throw new Error(propertyName + " does not exist for entity IndicatorScale");
         }
 
         return model_internal::_instance[propertyName];
@@ -140,7 +142,7 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     {
         if (model_internal::dataProperties.indexOf(propertyName) == -1)
         {
-            throw new Error(propertyName + " is not a data property of entity Pod");
+            throw new Error(propertyName + " is not a data property of entity IndicatorScale");
         }
 
         model_internal::_instance[propertyName] = value;
@@ -172,7 +174,7 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     {
         if (model_internal::allProperties.indexOf(propertyName) == -1)
         {
-            throw new Error(propertyName + " does not exist for entity Pod");
+            throw new Error(propertyName + " does not exist for entity IndicatorScale");
         }
 
         if (model_internal::allAlwaysAvailableProperties.indexOf(propertyName) != -1)
@@ -273,19 +275,31 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     }
 
     [Bindable(event="propertyChange")]
-    public function get isDataSourceAvailable():Boolean
+    public function get isReverseAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTitleAvailable():Boolean
+    public function get isPosicionregBuenaAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isValueFieldAvailable():Boolean
+    public function get isRegularAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get isPosicionminRegAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get isBuenoAvailable():Boolean
     {
         return true;
     }
@@ -297,19 +311,19 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTypeAvailable():Boolean
+    public function get isMaximoAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCategoryFieldAvailable():Boolean
+    public function get isPosicionbuenaMaxAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isJoinTableAvailable():Boolean
+    public function get isMinimoAvailable():Boolean
     {
         return true;
     }
@@ -331,19 +345,31 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     }
 
     [Bindable(event="propertyChange")]   
-    public function get dataSourceStyle():com.adobe.fiber.styles.Style
+    public function get reverseStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get titleStyle():com.adobe.fiber.styles.Style
+    public function get posicionregBuenaStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get valueFieldStyle():com.adobe.fiber.styles.Style
+    public function get regularStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get posicionminRegStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get buenoStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -355,19 +381,19 @@ internal class _PodEntityMetadata extends com.adobe.fiber.valueobjects.AbstractE
     }
 
     [Bindable(event="propertyChange")]   
-    public function get typeStyle():com.adobe.fiber.styles.Style
+    public function get maximoStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get categoryFieldStyle():com.adobe.fiber.styles.Style
+    public function get posicionbuenaMaxStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get joinTableStyle():com.adobe.fiber.styles.Style
+    public function get minimoStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
