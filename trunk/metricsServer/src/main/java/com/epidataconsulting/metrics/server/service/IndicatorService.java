@@ -1,22 +1,14 @@
 package com.epidataconsulting.metrics.server.service;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.text.StyledEditorKit.BoldAction;
-
-import flex.messaging.io.amf.ASObject; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.flex.remoting.RemotingDestination;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.epidataconsulting.metrics.common.dao.IndicatorDAO;
-import com.epidataconsulting.metrics.common.dao.IndicatorScaleDAO;
-import com.epidataconsulting.metrics.common.domain.Indicator;
-import com.epidataconsulting.metrics.common.domain.IndicatorScale;
+import com.epidataconsulting.metrics.common.domain.IndicatorDto;
 
 @Service 
 @RemotingDestination("indicatorService")
@@ -24,19 +16,32 @@ public class IndicatorService {
 	
 	@Autowired
 	private IndicatorDAO indicatorDao;
-	@Autowired
-	private IndicatorScaleDAO indicatorScaleDao;
+
+	
+
+	@Transactional
+	public List<IndicatorDto> searchIndicator(String indicatorTable, String indicatorCode, String valueField, String scaleTable) throws Exception{
+		try{
+			List<IndicatorDto> indicators = indicatorDao.searchIndicator(indicatorTable,indicatorCode,valueField,scaleTable);
+			for(IndicatorDto i : indicators){
+				i.getIndicatorscale().calcularValores();
+			}
+			return indicators;
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	
+/*	
 	@Transactional
 	public List<Indicator> findAllIndicators() {
 		List<Indicator> indicadores= indicatorDao.findAll();
 		for (Indicator indicador : indicadores){
-			try{	
-				indicador.evaluateQuality();
-				indicador.getIndicatorscale().calcularValorPossionesIntermedias();
-				indicador.getIndicatorscale().redondiarValores();
-			}catch (Exception e) {
-				//TODO lucianod: loggear u otra cosa, pero no println
-				System.out.println("no posee su escala");
+			if(indicador.getIndicatorscale() != null){
+				indicador.getIndicatorscale().calcularValores();
 			}
 		}
 		return indicadores;
@@ -50,10 +55,10 @@ public class IndicatorService {
 	}
 	
 	@Transactional
-	public IndicatorScale getIndicatorScale(int id){
-		
+	public IndicatorScale getIndicatorScale(int id){		
 		return indicatorScaleDao.load(id);
 	}
+	
 	@Transactional
 	public IndicatorScale getIndicatorScale(String code){
 		IndicatorScale indicatorScale=indicatorScaleDao.findByCode(code);
@@ -76,5 +81,5 @@ public class IndicatorService {
 		indicatorScaleDao.update(scale);
 		return true;
 	}
-
+*/
 }

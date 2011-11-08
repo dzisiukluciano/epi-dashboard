@@ -8,11 +8,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.epidataconsulting.metrics.common.dao.AbstractDomainDAO;
+import com.epidataconsulting.metrics.common.dao.AbstractBusinessDAO;
 import com.epidataconsulting.metrics.server.domain.PodData;
 
 @Repository
-public class PodDataDao extends AbstractDomainDAO{
+public class PodDataDao extends AbstractBusinessDAO{
 	
 	@SuppressWarnings("rawtypes")
 	@Override
