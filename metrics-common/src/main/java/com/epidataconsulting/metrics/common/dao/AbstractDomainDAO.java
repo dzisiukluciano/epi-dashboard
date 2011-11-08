@@ -77,6 +77,7 @@ public abstract class AbstractDomainDAO {
 	public void update(AbstractDomain object) {
 		Session session = getSessionFactory().getCurrentSession();
 		session.merge(object);
+		session.flush();
 	}
 	public void persist(AbstractDomain object) {
 		Session session = getSessionFactory().getCurrentSession();

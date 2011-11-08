@@ -1,7 +1,5 @@
 package com.epidataconsulting.metrics.common.config;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -13,21 +11,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
-import org.springframework.orm.hibernate3.support.IdTransferringMergeEventListener;
 
 
-@ImportResource("classpath:properties-config.xml")
-public abstract class AbstractHibernateConfig {
+@ImportResource("classpath:businessProperties-config.xml")
+public abstract class AbstractBusinessHibernateConfig {
 	
-	  private @Value("${jdbc.url}") String url;
-	  private @Value("${jdbc.username}") String username;
-	  private @Value("${jdbc.password}") String password;
-	  private @Value("${jdbc.driverClassName}") String driverClassName;
-	  private @Value("${hibernate.dialect}") String dialect;
-	  private @Value("${hibernate.showSql}") String showSql;
-	  private @Value("${hibernate.hbm2ddl.auto}") String hbm2ddlauto;
+	  private @Value("${jdbcBusiness.url}") String url;
+	  private @Value("${jdbcBusiness.username}") String username;
+	  private @Value("${jdbcBusiness.password}") String password;
+	  private @Value("${jdbcBusiness.driverClassName}") String driverClassName;
+	  private @Value("${hibernateBusiness.dialect}") String dialect;
+	  private @Value("${hibernateBusiness.showSql}") String showSql;
+	  private @Value("${hibernateBusiness.hbm2ddl.auto}") String hbm2ddlauto;
 
-	  public @Bean DataSource dataSource() {
+	  public @Bean DataSource dataSourceBusiness() {
 		  BasicDataSource datasource = new BasicDataSource();
 		  datasource.setUrl(url);
 		  datasource.setPassword(password);
@@ -37,17 +34,12 @@ public abstract class AbstractHibernateConfig {
 	      return datasource;
 	  }
 	  
-	  @Bean public SessionFactory sessionFactory() {
+	  @Bean public SessionFactory sessionFactoryBusiness() {
 		  AnnotationSessionFactoryBean sessionFactory = new AnnotationSessionFactoryBean();
 		  
-		  sessionFactory.setDataSource(dataSource());
+		  sessionFactory.setDataSource(dataSourceBusiness());
 		  sessionFactory.setPackagesToScan(getPackagesToScan());
-		  sessionFactory.setHibernateProperties(hibernateProperties());
-		  
-		  Map eventListeners = new HashMap();
-		  eventListeners.put("merge", new IdTransferringMergeEventListener());
-		  sessionFactory.setEventListeners(eventListeners);
-		  
+		  sessionFactory.setHibernateProperties(hibernatePropertiesBusiness());
 		  try {
 			sessionFactory.afterPropertiesSet();
 		} catch (Exception e) {
@@ -59,7 +51,7 @@ public abstract class AbstractHibernateConfig {
 	  
 	  protected abstract String [] getPackagesToScan();
 	  
-	  public @Bean Properties hibernateProperties(){
+	  public @Bean Properties hibernatePropertiesBusiness(){
 		  Properties hibernateProperties = new Properties();
 		  
 		  hibernateProperties.setProperty("hibernate.hbm2ddl.auto", hbm2ddlauto);
