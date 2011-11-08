@@ -9,13 +9,6 @@
 	skinClass="skins.CustomApplicationSkin"
 	xmlns:autoServices="autoServices.*"
 	applicationComplete="onApplicationComplete()" >
-	
-	<fx:Declarations>			
-		<s:CallResponder id="findAllTabsResult"/>
-		<autoServices:TabService id="tabService" 
-			fault="faultHandler(event.fault)" showBusyCursor="true"
-			result="findAllTabsResultHandler(event.result)" />
-	</fx:Declarations>
 		
 	
 	<fx:Script>
@@ -29,10 +22,12 @@
 			import com.esria.samples.dashboard.managers.PodLayoutManager;
 			import com.esria.samples.dashboard.managers.StateManager;
 			import com.esria.samples.dashboard.view.ChartContent;
+			import com.esria.samples.dashboard.view.GaugeContent;
 			import com.esria.samples.dashboard.view.PieChartContent;
 			import com.esria.samples.dashboard.view.PodContentBase;
 			import com.esria.samples.dashboard.view.PodPanel;
 			
+			import components.TabContainer;
 			import components.editTab;
 			
 			import flash.sampler.NewObjectSample;
@@ -51,8 +46,6 @@
 			
 			import spark.components.NavigatorContent;
 			import spark.events.IndexChangeEvent;
-			
-			import vo.TabContainer;
 			
 			// Array of PodLayoutManagers
 			private var podLayoutManagers:Array = new Array();
@@ -137,10 +130,12 @@
 				{
 					// Figure out which type of pod content to use.
 					var podContent:PodContentBase = null;
-					if (pod.type.name == "chart")
+					if (pod.type.name == "Chart")
 						podContent = new ChartContent();
-					else if (pod.type.name == "pieChart")
+					else if (pod.type.name == "PieChart")
 						podContent = new PieChartContent();
+					else if (pod.type.name == "Gauge")
+						podContent = new GaugeContent();
 					
 					if (podContent != null)
 					{
@@ -244,6 +239,7 @@
 					agregarPestaniaNewTab();
 								
 				tab.tab = t;
+				tab.label = t.name;
 				
 				for each(var manager:PodLayoutManager in podLayoutManagers){
 					if(manager.id == tab.id){
@@ -267,6 +263,7 @@
 				var tab:TabContainer = getCurrentTab();
 				
 				if(!tab.newTab){
+					deleteTabResult.token = tabService.deleteTab(editTab(e.target).tab);
 					viewStack.removeChild(tab);
 					var managers:Array = new Array();
 					for each(var manager:PodLayoutManager in podLayoutManagers){
@@ -308,6 +305,13 @@
 			
 		]]>
 	</fx:Script>
+		
+	<fx:Declarations>			
+		<s:CallResponder id="findAllTabsResult" fault="faultHandler(event.fault)"
+						 result="findAllTabsResultHandler(event.result)" />
+		<s:CallResponder id="deleteTabResult"/>
+		<autoServices:TabService id="tabService"  showBusyCursor="true" />
+	</fx:Declarations>
 	
 	<s:layout>
 		<s:VerticalLayout horizontalAlign="left" paddingLeft="45" paddingRight="45" paddingBottom="35" paddingTop="34"/>
